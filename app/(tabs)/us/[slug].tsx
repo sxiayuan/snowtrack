@@ -1,8 +1,22 @@
-import { useLocalSearchParams } from 'expo-router';
+import { useLocalSearchParams, useRouter } from 'expo-router';
 import { View, Text, StyleSheet } from 'react-native';
+import { useEffect } from 'react';
 
 export default function USCategoryPage() {
   const { slug } = useLocalSearchParams();
+  const router = useRouter();
+
+  useEffect(() => {
+    // Redirect commonapp to the actual CommonApp page
+    if (slug === 'commonapp') {
+      router.replace('/us/commonApp');
+    }
+    // Redirect overview to the actual Overview page
+    if (slug === 'overview') {
+      router.replace('/us/overview');
+    }
+  }, [slug, router]);
+
   return (
     <View style={styles.container}>
       <Text style={styles.heading}>{slug?.toString().replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase())}</Text>

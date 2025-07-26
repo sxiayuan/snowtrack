@@ -35,127 +35,275 @@ function AnimatedSwitchingWord() {
 }
 
 const CATEGORIES = [
-  { icon: '🔍', label: 'Browse All' },
+  { icon: '🔍', label: 'Overview' },
   { icon: '⛵', label: 'Test Scores' },
-  { icon: '🏫', label: 'Awards' },
+      { icon: '⏰', label: 'Early Applications' },
   { icon: '🏆', label: 'Why America?' },
-  { icon: '🐷', label: 'Free' },
+  { icon: '💰', label: 'Finances' },
   { icon: '👥', label: '1-on-1' },
-  { icon: '🎖️', label: 'Selective' },
+  { icon: '🎖️', label: 'CommonApp' },
   { icon: '📅', label: 'Upcoming' },
-  { icon: '🧬', label: 'STEM' },
+  { icon: '📊', label: 'Data' },
   { icon: '🤝', label: 'Business' },
 ];
 
-// MiniQuiz component: decision tree, one question at a time
-function MiniQuiz() {
-  const tree = [
+// Simple Quiz Component
+function MiniQuiz({ router }: { router: any }) {
+  const [step, setStep] = useState<'start' | 'question' | 'result'>('start');
+  const [currentQuestion, setCurrentQuestion] = useState(0);
+  const [answers, setAnswers] = useState<string[]>([]);
+  const [showInfo, setShowInfo] = useState(false);
+  
+  const questions = [
     {
-      question: 'Are you interested in studying in a new country?',
-      options: [
-        { text: 'Yes', next: 1 },
-        { text: 'Not sure', next: 2 },
-        { text: 'No', next: 'not-fit' },
-      ],
+      text: 'Are you able to pay full tuition (~600,000 CAD) for four years of undergraduate study?',
+      info: 'US universities typically cost $50,000-80,000 USD per year, including tuition, room, board, and fees. This is significantly higher than Canadian universities.'
     },
     {
-      question: 'Do you enjoy meeting new people from different backgrounds?',
-      options: [
-        { text: 'Yes', next: 'fit' },
-        { text: 'Sometimes', next: 'maybe-fit' },
-        { text: 'No', next: 'not-fit' },
-      ],
+      text: 'Do you enjoy meeting new people from different backgrounds?',
+      info: 'US universities are incredibly diverse, with students from all over the world. You\'ll interact with people from different cultures, languages, and perspectives daily.'
     },
     {
-      question: 'Are you open to new academic challenges?',
-      options: [
-        { text: 'Yes', next: 'fit' },
-        { text: 'Maybe', next: 'maybe-fit' },
-        { text: 'No', next: 'not-fit' },
-      ],
+      text: 'Are you open to new academic challenges?',
+      info: 'US education emphasizes critical thinking, class participation, and interdisciplinary learning. You\'ll be expected to contribute actively in discussions and take on leadership roles.'
     },
+    {
+      text: 'Are you applying for Top American Universities, such as Harvard, Princeton or Yale?',
+      info: 'Top-tier universities often have more generous financial aid packages and larger endowments. They may offer need-blind admissions and meet 100% of demonstrated financial need for international students.'
+    }
   ];
-  const [current, setCurrent] = React.useState<number | string>(0); // index in tree or result string
-  const [path, setPath] = React.useState<Array<{q: number, a: number}>>([]);
+  
+  const startQuiz = () => setStep('question');
   const restartQuiz = () => {
-    setCurrent(0);
-    setPath([]);
+    setStep('start');
+    setCurrentQuestion(0);
+    setAnswers([]);
+    setShowInfo(false);
   };
-  let content;
-  if (typeof current === 'string') {
-    let result = '';
-    if (current === 'fit') result = "You're a great fit for studying in the US!";
-    else if (current === 'maybe-fit') result = "You might enjoy studying in the US, but think about your comfort with change.";
-    else result = "Studying abroad can be challenging. Reflect on your goals and support systems.";
-    content = (
-      <View style={{ marginTop: 16, backgroundColor: '#e6f2fb', borderRadius: 18, padding: 28, alignItems: 'center', width: 340 }}>
-        <Text style={{ fontSize: 22, fontWeight: 'bold', color: '#2563eb', marginBottom: 12 }}>Result</Text>
-        <Text style={{ fontSize: 17, color: '#25304A', textAlign: 'center', marginBottom: 16 }}>{result}</Text>
-        <Pressable
-          onPress={restartQuiz}
-          style={{ backgroundColor: '#2563eb', borderRadius: 20, paddingVertical: 10, paddingHorizontal: 28, marginTop: 6 }}
-        >
-          <Text style={{ color: '#fff', fontWeight: 'bold', fontSize: 16 }}>Restart</Text>
-        </Pressable>
-      </View>
-    );
-  } else {
-    const q = tree[current];
-    content = (
-      <View style={{ width: 340, alignSelf: 'center', backgroundColor: '#fff', borderRadius: 18, paddingVertical: 24, paddingHorizontal: 24, shadowColor: '#000', shadowOpacity: 0.08, shadowRadius: 12, shadowOffset: { width: 0, height: 2 }, elevation: 3, minHeight: 0, height: 'auto', margin: 0 }}>
-        <Text style={{ fontWeight: 'bold', fontSize: 20, marginBottom: 18, textAlign: 'center', color: '#25304A' }}>{q.question}</Text>
-        {q.options.map((opt, idx) => (
+  
+  const answerQuestion = (answer: string) => {
+    const newAnswers = [...answers, answer];
+    setAnswers(newAnswers);
+    setShowInfo(false);
+    
+    // Simplified and fixed branching logic
+    if (currentQuestion === 0) {
+      if (answer === 'Yes') {
+        // Yes to tuition -> go to question 1 (diversity)
+        setCurrentQuestion(1);
+      } else {
+        // No to tuition -> go to question 3 (top universities)
+        setCurrentQuestion(3);
+      }
+    } else if (currentQuestion === 1) {
+      // After diversity question, go to academic challenges
+      setCurrentQuestion(2);
+    } else {
+      // For question 2 or 3, show result
+      setStep('result');
+    }
+  };
+  
+  const getResult = () => {
+    // If they answered No to tuition and then answered the top universities question
+    if (answers[0] === 'No') {
+      return "American education may be financially challenging for you. You can still apply, but be warned: It is significantly harder to land top schools while seeking financial aid.";
+    }
+    
+    // For the Yes path (tuition -> diversity -> academic challenges)
+    const yesCount = answers.filter(a => a === 'Yes').length;
+    if (yesCount >= 2) return "You're a great fit for studying in the US!";
+    if (yesCount >= 1) return "You might enjoy studying in the US, but think about your comfort with change.";
+    return "Studying abroad can be challenging. Reflect on your goals and support systems.";
+  };
+  
+  const renderContent = () => {
+    const containerStyle = {
+      width: 480,
+      alignSelf: 'center' as const,
+      backgroundColor: '#fff',
+      borderRadius: 18,
+      paddingVertical: 32,
+      paddingHorizontal: 32,
+      shadowColor: '#000',
+      shadowOpacity: 0.08,
+      shadowRadius: 12,
+      shadowOffset: { width: 0, height: 2 },
+      elevation: 3,
+      margin: 0
+    };
+    
+    if (step === 'start') {
+      return (
+        <View style={containerStyle}>
+          <Text style={{ fontSize: 24, color: '#25304A', textAlign: 'center', marginBottom: 32, fontFamily: 'Lato-Regular' }}>
+            Take this quick quiz to see if studying in the United States is right for you. It only takes a few minutes!
+          </Text>
           <Pressable
-            key={idx}
-            onPress={() => {
-              setPath([...path, { q: current, a: idx }]);
-              setCurrent(opt.next);
-            }}
+            onPress={startQuiz}
+            style={{ backgroundColor: '#2563eb', borderRadius: 20, paddingVertical: 16, paddingHorizontal: 32, alignItems: 'center' }}
+          >
+            <Text style={{ color: '#fff', fontWeight: 'bold', fontSize: 18 }}>Start Quiz</Text>
+          </Pressable>
+        </View>
+      );
+    }
+    
+    if (step === 'question') {
+      return (
+        <View style={containerStyle}>
+          <Text style={{ fontWeight: 'bold', fontSize: 24, marginBottom: 16, textAlign: 'center', color: '#25304A' }}>
+            {questions[currentQuestion].text}
+          </Text>
+          
+          <Pressable
+            onPress={() => setShowInfo(!showInfo)}
             style={{
-              backgroundColor: '#f0f8f8',
-              borderRadius: 16,
-              paddingVertical: 12,
-              paddingHorizontal: 18,
-              marginBottom: 12,
+              backgroundColor: '#e6f2fb',
+              borderRadius: 12,
+              paddingVertical: 8,
+              paddingHorizontal: 16,
+              marginBottom: 20,
+              alignSelf: 'center',
               borderWidth: 1,
               borderColor: '#b6d7f2',
-              alignItems: 'center',
             }}
           >
-            <Text style={{ color: '#25304A', fontWeight: 'bold', fontSize: 16 }}>{opt.text}</Text>
+            <Text style={{ color: '#2563eb', fontWeight: 'bold', fontSize: 14 }}>
+              {showInfo ? 'Hide Info' : 'Learn More'}
+            </Text>
           </Pressable>
-        ))}
-      </View>
-    );
-  }
+          
+          {showInfo && (
+            <View style={{
+              backgroundColor: '#f8fafc',
+              borderRadius: 12,
+              padding: 16,
+              marginBottom: 20,
+              borderLeftWidth: 4,
+              borderLeftColor: '#2563eb',
+            }}>
+              <Text style={{ color: '#25304A', fontSize: 16, lineHeight: 22 }}>
+                {questions[currentQuestion].info}
+              </Text>
+              {currentQuestion === 0 && (
+                <Pressable
+                  onPress={() => router.replace('/us/finances')}
+                  style={{
+                    marginTop: 12,
+                    paddingVertical: 8,
+                    paddingHorizontal: 12,
+                    backgroundColor: '#2563eb',
+                    borderRadius: 8,
+                    alignSelf: 'flex-start',
+                  }}
+                >
+                  <Text style={{ color: '#fff', fontWeight: 'bold', fontSize: 14 }}>
+                    Learn More About Finances →
+                  </Text>
+                </Pressable>
+              )}
+            </View>
+          )}
+          
+          {['Yes', 'No'].map((option, idx) => (
+            <Pressable
+              key={idx}
+              onPress={() => answerQuestion(option)}
+              style={{
+                backgroundColor: '#f0f8f8',
+                borderRadius: 16,
+                paddingVertical: 16,
+                paddingHorizontal: 24,
+                marginBottom: 16,
+                borderWidth: 1,
+                borderColor: '#b6d7f2',
+                alignItems: 'center',
+              }}
+            >
+              <Text style={{ color: '#25304A', fontWeight: 'bold', fontSize: 18 }}>{option}</Text>
+            </Pressable>
+          ))}
+        </View>
+      );
+    }
+    
+    if (step === 'result') {
+      return (
+        <View style={{...containerStyle, backgroundColor: '#e6f2fb'}}>
+          <Text style={{ fontSize: 26, fontWeight: 'bold', color: '#2563eb', marginBottom: 24 }}>Result</Text>
+          <Text style={{ fontSize: 24, color: '#25304A', textAlign: 'center', marginBottom: 32 }}>{getResult()}</Text>
+          <Pressable
+            onPress={restartQuiz}
+            style={{ backgroundColor: '#2563eb', borderRadius: 20, paddingVertical: 16, paddingHorizontal: 32, alignItems: 'center' }}
+          >
+            <Text style={{ color: '#fff', fontWeight: 'bold', fontSize: 18 }}>Restart</Text>
+          </Pressable>
+        </View>
+      );
+    }
+  };
+  
   return (
     <View style={{ width: '100%', alignItems: 'center', justifyContent: 'flex-start', minHeight: 0, paddingTop: 0, paddingBottom: 0, marginTop: 12, marginBottom: 0, height: 'auto' }}>
-      {content}
+      <Text style={{ fontSize: 32, fontWeight: 'bold', color: '#25304A', marginBottom: 24, textAlign: 'center', fontFamily: 'Lato-Bold' }}>
+        Are you a Good Fit to Study in the United States?
+      </Text>
+      {renderContent()}
     </View>
   );
 }
 
-export default function USScreen() {
-  const router = useRouter();
-  const canadaScale = useRef(new Animated.Value(1)).current;
-  const medScale = useRef(new Animated.Value(1)).current;
-
-  const animateIn = (scaleRef: Animated.Value) => {
-    Animated.spring(scaleRef, {
-      toValue: 0.96,
+// Category Card Component to fix state-in-render issue
+function CategoryCard({ category, router }: { category: { icon: string; label: string }; router: any }) {
+  const [hovered, setHovered] = useState(false);
+  const scale = useRef(new Animated.Value(1)).current;
+  
+  const handleHoverIn = () => {
+    setHovered(true);
+    Animated.spring(scale, {
+      toValue: 1.08,
       useNativeDriver: true,
       speed: 30,
       bounciness: 8,
     }).start();
   };
-  const animateOut = (scaleRef: Animated.Value) => {
-    Animated.spring(scaleRef, {
+  
+  const handleHoverOut = () => {
+    setHovered(false);
+    Animated.spring(scale, {
       toValue: 1,
       useNativeDriver: true,
       speed: 30,
       bounciness: 8,
     }).start();
   };
+
+  return (
+    <Animated.View
+      style={{ transform: [{ scale }], marginHorizontal: 12, marginVertical: 2 }}
+    >
+      <Pressable
+        style={styles.categoryCard}
+                                onPress={() => {
+          if (category.label === 'Overview') {
+            router.replace('/us/overview');
+          } else {
+            router.replace({ pathname: '/us/[slug]', params: { slug: category.label.toLowerCase().replace(/[^a-z0-9]+/g, '-') } });
+          }
+        }}
+        onHoverIn={handleHoverIn}
+        onHoverOut={handleHoverOut}
+      >
+        <Text style={styles.categoryIcon}>{category.icon}</Text>
+        <Text style={styles.categoryLabel}>{category.label}</Text>
+      </Pressable>
+    </Animated.View>
+  );
+}
+
+export default function USScreen() {
+  const router = useRouter();
 
   return (
     <View style={{ flex: 1, backgroundColor: '#A6D3F2' }}>
@@ -175,10 +323,10 @@ export default function USScreen() {
               <Text style={styles.brandName}>Snowtrack</Text>
             </View>
           </View>
-          {/* Removed headerRight section with Find, Lists, and Sign In buttons */}
         </View>
         <View style={styles.headerBottom} />
       </View>
+      
       {/* Main Area */}
       <ScrollView contentContainerStyle={{ alignItems: 'center', backgroundColor: '#b6d7f2' }}>
         <View style={[styles.centeredContent, { marginTop: 180 }]}>
@@ -201,82 +349,47 @@ export default function USScreen() {
           <View style={styles.categoriesGrid}>
             {[0, 1].map(row => (
               <View key={row} style={{ flexDirection: 'row', justifyContent: 'center', width: '100%' }}>
-                {CATEGORIES.slice(row * 5, row * 5 + 5).map((cat, i) => {
-                  const [hovered, setHovered] = useState(false);
-                  const scale = useRef(new Animated.Value(1)).current;
-                  const handleHoverIn = () => {
-                    setHovered(true);
-                    Animated.spring(scale, {
-                      toValue: 1.08,
-                      useNativeDriver: true,
-                      speed: 30,
-                      bounciness: 8,
-                    }).start();
-                  };
-                  const handleHoverOut = () => {
-                    setHovered(false);
-                    Animated.spring(scale, {
-                      toValue: 1,
-                      useNativeDriver: true,
-                      speed: 30,
-                      bounciness: 8,
-                    }).start();
-                  };
-                  return (
-                    <Animated.View
-                      key={cat.label}
-                      style={{ transform: [{ scale }], marginHorizontal: 12, marginVertical: 2 }}
-                    >
-                      <Pressable
-                        style={styles.categoryCard}
-                        onPress={() => router.push({ pathname: '/us/[slug]', params: { slug: cat.label.toLowerCase().replace(/[^a-z0-9]+/g, '-') } })}
-                        onHoverIn={handleHoverIn}
-                        onHoverOut={handleHoverOut}
-                      >
-                        <Text style={styles.categoryIcon}>{cat.icon}</Text>
-                        <Text style={styles.categoryLabel}>{cat.label}</Text>
-                      </Pressable>
-                    </Animated.View>
-                  );
-                })}
+                {CATEGORIES.slice(row * 5, row * 5 + 5).map((cat) => (
+                  <CategoryCard key={cat.label} category={cat} router={router} />
+                ))}
               </View>
             ))}
           </View>
-          <MiniQuiz />
-          {/* White section removed */}
+          <MiniQuiz router={router} />
         </View>
-        {/* Footer (now inside ScrollView) */}
+        
+        {/* Footer */}
         <View style={{ width: '100%', backgroundColor: '#fff' }}>
           <View style={[styles.footer, { marginTop: 0, backgroundColor: '#fff' }]}> 
-          <View style={styles.footerLeft}>
-            <View style={styles.footerLogoRow}>
-              <Image source={require('@/assets/images/SnowTrackTransparent.png')} style={styles.footerLogo} resizeMode="contain" />
-              <Text style={styles.footerBrand}>Snowtrack</Text>
-            </View>
-            <View style={styles.footerLinksRow}>
-              <View style={styles.footerCol}>
-                <Text style={styles.footerColTitle}>About</Text>
-                <Text style={styles.footerLink}>Our Promises</Text>
-                <Text style={styles.footerLink}>Our Community</Text>
+            <View style={styles.footerLeft}>
+              <View style={styles.footerLogoRow}>
+                <Image source={require('@/assets/images/SnowTrackTransparent.png')} style={styles.footerLogo} resizeMode="contain" />
+                <Text style={styles.footerBrand}>Snowtrack</Text>
               </View>
-              <View style={styles.footerCol}>
-                <Text style={styles.footerColTitle}>Legal</Text>
-                <Text style={styles.footerLink}>Terms of Service</Text>
-                <Text style={styles.footerLink}>Privacy Policy</Text>
+              <View style={styles.footerLinksRow}>
+                <View style={styles.footerCol}>
+                  <Text style={styles.footerColTitle}>About</Text>
+                  <Text style={styles.footerLink}>Our Promises</Text>
+                  <Text style={styles.footerLink}>Our Community</Text>
+                </View>
+                <View style={styles.footerCol}>
+                  <Text style={styles.footerColTitle}>Legal</Text>
+                  <Text style={styles.footerLink}>Terms of Service</Text>
+                  <Text style={styles.footerLink}>Privacy Policy</Text>
+                </View>
               </View>
             </View>
-          </View>
-          <View style={styles.footerRight}>
-            <View style={styles.footerSocialRow}>
-              <Text style={styles.footerSocialIcon}>🎵</Text>
-              <Text style={styles.footerSocialIcon}>📸</Text>
-              <Text style={styles.footerSocialIcon}>🔗</Text>
+            <View style={styles.footerRight}>
+              <View style={styles.footerSocialRow}>
+                <Text style={styles.footerSocialIcon}>🎵</Text>
+                <Text style={styles.footerSocialIcon}>📸</Text>
+                <Text style={styles.footerSocialIcon}>🔗</Text>
+              </View>
+              <Text style={styles.footerContact}>Contact Us</Text>
+              <Text style={styles.footerCopyright}>© Snowtrack 2025</Text>
             </View>
-            <Text style={styles.footerContact}>Contact Us</Text>
-            <Text style={styles.footerCopyright}>© Snowtrack 2025</Text>
           </View>
         </View>
-      </View> {/* Close the footer container */}
       </ScrollView>
     </View>
   );

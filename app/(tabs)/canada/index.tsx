@@ -6,93 +6,26 @@ import { LinearGradient } from 'expo-linear-gradient';
 
 export default function CanadaScreen() {
   const router = useRouter();
-  const canadaScale = useRef(new Animated.Value(1)).current;
-  const medScale = useRef(new Animated.Value(1)).current;
-
-  const animateIn = (scaleRef: Animated.Value) => {
-    Animated.spring(scaleRef, {
-      toValue: 0.96,
-      useNativeDriver: true,
-      speed: 30,
-      bounciness: 8,
-    }).start();
-  };
-  const animateOut = (scaleRef: Animated.Value) => {
-    Animated.spring(scaleRef, {
-      toValue: 1,
-      useNativeDriver: true,
-      speed: 30,
-      bounciness: 8,
-    }).start();
-  };
-
-  const handleBusinessPress = () => {
-    router.push('/canada/business');
-  };
-  const handleMedPress = () => {
-    router.push('/canada/med');
-  };
 
   return (
     <View style={{ flex: 1, backgroundColor: '#A6D3F2' }}>
-      {/* Header */}
-      <View style={styles.header}>
-        <View style={styles.headerTop} />
-        <View style={styles.headerContent}>
-          <View style={styles.headerLeft}>
-            <View style={styles.logo}>
-              <Image
-                source={require('@/assets/images/SnowTrackTransparent.png')}
-                style={styles.headerLogo}
-                resizeMode="contain"
-              />
-            </View>
-            <View style={styles.brand}>
-              <Text style={styles.brandName}>Snowtrack</Text>
-            </View>
-          </View>
-        </View>
-        <View style={styles.headerBottom} />
-      </View>
       {/* Main Area */}
       <View style={{ flex: 1, backgroundColor: '#b6d7f2', alignItems: 'center', justifyContent: 'center', width: '100%' }}>
         <View style={styles.centeredContent}>
-          <Text style={styles.bigHeading}>Extracurriculars & Enrichment</Text>
-          <Text style={styles.subHeading}>Top Opportunities Curated by College Experts</Text>
-          <View style={styles.searchBar}>
-            <Text style={styles.searchIcon}>🔍</Text>
-            <Text style={styles.searchPlaceholder}>Search by interest, name...</Text>
-          </View>
-        </View>
-      </View>
-      {/* Footer */}
-      <View style={[styles.footer, { marginTop: 0 }]}>
-        <View style={styles.footerLeft}>
-          <View style={styles.footerLogoRow}>
-            <Image source={require('@/assets/images/SnowTrackTransparent.png')} style={styles.footerLogo} resizeMode="contain" />
-            <Text style={styles.footerBrand}>Snowtrack</Text>
-          </View>
-          <View style={styles.footerLinksRow}>
-            <View style={styles.footerCol}>
-              <Text style={styles.footerColTitle}>About</Text>
-              <Text style={styles.footerLink}>Our Promises</Text>
-              <Text style={styles.footerLink}>Our Community</Text>
-            </View>
-            <View style={styles.footerCol}>
-              <Text style={styles.footerColTitle}>Legal</Text>
-              <Text style={styles.footerLink}>Terms of Service</Text>
-              <Text style={styles.footerLink}>Privacy Policy</Text>
+          <View style={styles.comingSoonContainer}>
+            <Text style={styles.comingSoonText}>COMING SOON</Text>
+            <Text style={styles.comingSoonSubtext}>Canadian University Resources</Text>
+            <Text style={styles.comingSoonDescription}>
+              We're working hard to bring you comprehensive guides for Canadian universities, 
+              including business programs, medical school applications, and more.
+            </Text>
+            <View style={styles.progressContainer}>
+              <View style={styles.progressBar}>
+                <View style={styles.progressFill} />
+              </View>
+              <Text style={styles.progressText}>Development in Progress</Text>
             </View>
           </View>
-        </View>
-        <View style={styles.footerRight}>
-          <View style={styles.footerSocialRow}>
-            <Text style={styles.footerSocialIcon}>🎵</Text>
-            <Text style={styles.footerSocialIcon}>📸</Text>
-            <Text style={styles.footerSocialIcon}>🔗</Text>
-          </View>
-          <Text style={styles.footerContact}>Contact Us</Text>
-          <Text style={styles.footerCopyright}>© Snowtrack 2025</Text>
         </View>
       </View>
     </View>
@@ -345,7 +278,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     width: '100%',
-    marginTop: 48,
     paddingVertical: 48,
     paddingHorizontal: 32,
   },
@@ -372,6 +304,68 @@ const styles = StyleSheet.create({
   searchPlaceholder: {
     color: '#b0b8c1',
     fontSize: 18,
+    fontFamily: 'Lato-Regular',
+  },
+  comingSoonContainer: {
+    backgroundColor: '#fff',
+    borderRadius: 20,
+    padding: 40,
+    alignItems: 'center',
+    maxWidth: 500,
+    width: '90%',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 8,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 16,
+    elevation: 8,
+  },
+  comingSoonText: {
+    fontSize: 48,
+    fontWeight: 'bold',
+    color: '#25304A',
+    fontFamily: 'Lato-Bold',
+    marginBottom: 16,
+    letterSpacing: 2,
+  },
+  comingSoonSubtext: {
+    fontSize: 24,
+    color: '#4ccfff',
+    fontFamily: 'Lato-Bold',
+    marginBottom: 24,
+    textAlign: 'center',
+  },
+  comingSoonDescription: {
+    fontSize: 16,
+    color: '#6B7280',
+    fontFamily: 'Lato-Regular',
+    textAlign: 'center',
+    lineHeight: 24,
+    marginBottom: 32,
+  },
+  progressContainer: {
+    width: '100%',
+    alignItems: 'center',
+  },
+  progressBar: {
+    width: '100%',
+    height: 8,
+    backgroundColor: '#E5E7EB',
+    borderRadius: 4,
+    marginBottom: 12,
+    overflow: 'hidden',
+  },
+  progressFill: {
+    width: '60%',
+    height: '100%',
+    backgroundColor: '#4ccfff',
+    borderRadius: 4,
+  },
+  progressText: {
+    fontSize: 14,
+    color: '#6B7280',
     fontFamily: 'Lato-Regular',
   },
 });
