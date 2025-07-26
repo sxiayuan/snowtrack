@@ -288,6 +288,8 @@ function CategoryCard({ category, router }: { category: { icon: string; label: s
                                 onPress={() => {
           if (category.label === 'Overview') {
             router.replace('/us/overview');
+          } else if (category.label === 'Early Applications') {
+            router.replace('/us/earlyApplications');
           } else {
             router.replace({ pathname: '/us/[slug]', params: { slug: category.label.toLowerCase().replace(/[^a-z0-9]+/g, '-') } });
           }

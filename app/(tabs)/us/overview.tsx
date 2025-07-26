@@ -1,24 +1,65 @@
-import React, { useRef } from 'react';
-import { StyleSheet, TouchableOpacity, Image, Animated, View, Text, ScrollView } from 'react-native';
-import { useRouter } from 'expo-router';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Alert, Image, Animated, Share } from 'react-native';
+import { useRef, useState } from 'react';
 import { Feather } from '@expo/vector-icons';
 
-export default function BrowseAllPage() {
-  const router = useRouter();
-  const scrollViewRef = useRef<ScrollView>(null);
+export default function OverviewPage() {
   const scrollY = useRef(new Animated.Value(0)).current;
+  const scrollViewRef = useRef<ScrollView>(null);
+  const headerHeight = 80;
+  
+  // Section refs for navigation
+  const introductionRef = useRef<View>(null);
+  const differencesRef = useRef<View>(null);
+  const financialRealityRef = useRef<View>(null);
+  const sectionsRef = useRef<View>(null);
+  
   const headerTranslateY = scrollY.interpolate({
-    inputRange: [0, 100],
-    outputRange: [0, -80],
+    inputRange: [0, headerHeight],
+    outputRange: [0, -headerHeight],
     extrapolate: 'clamp',
   });
 
   const handleShare = async () => {
     try {
-      // Share functionality would go here
-      console.log('Share pressed');
+      const url = 'https://snowtrack.app/us/overview';
+      const message = 'Check out this comprehensive overview of applying to US universities from Canada: ' + url;
+      
+      const result = await Share.share({
+        message: message,
+        url: url,
+        title: 'Canada to US University Guide'
+      });
+      
+      if (result.action === Share.sharedAction) {
+        if (result.activityType) {
+          console.log('Shared with activity type:', result.activityType);
+        } else {
+          console.log('Shared successfully');
+        }
+      } else if (result.action === Share.dismissedAction) {
+        console.log('Share dismissed');
+      }
     } catch (error) {
       console.error('Error sharing:', error);
+      Alert.alert('Error', 'Unable to share at this time.');
+    }
+  };
+
+  const scrollToSection = (sectionRef: React.RefObject<View | null>) => {
+    if (sectionRef.current && scrollViewRef.current) {
+      sectionRef.current.measureLayout(
+        scrollViewRef.current as any,
+        (x, y) => {
+          scrollViewRef.current?.scrollTo({
+            y: y - 100, // Offset for header
+            animated: true,
+          });
+        },
+        () => {
+          // Fallback if measureLayout fails
+          Alert.alert('Navigation', 'Unable to scroll to section');
+        }
+      );
     }
   };
 
@@ -67,8 +108,8 @@ export default function BrowseAllPage() {
                 />
               </View>
               <View style={styles.authorDetails}>
-                <Text style={styles.authorName}>Snowtrack Research Team</Text>
-                <Text style={styles.readTime}>20 min read • Updated Jan 2025</Text>
+                <Text style={styles.authorName}>Snowtrack Advisor</Text>
+                <Text style={styles.readTime}>5 min read • Updated Jan 2025</Text>
               </View>
             </View>
             <TouchableOpacity onPress={handleShare} style={styles.shareButton}>
@@ -78,52 +119,124 @@ export default function BrowseAllPage() {
           
           <View style={styles.divider} />
           
+          {/* Table of Contents */}
+          <View style={styles.tocContainer}>
+            <Text style={styles.tocTitle}>Quick Navigation</Text>
+            <View style={styles.tocLinks}>
+              <TouchableOpacity onPress={() => scrollToSection(introductionRef)} style={styles.tocLink}>
+                <Text style={styles.tocLinkText}>Introduction</Text>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={() => scrollToSection(differencesRef)} style={styles.tocLink}>
+                <Text style={styles.tocLinkText}>Canadian vs US Approach</Text>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={() => scrollToSection(financialRealityRef)} style={styles.tocLink}>
+                <Text style={styles.tocLinkText}>Financial Reality</Text>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={() => scrollToSection(sectionsRef)} style={styles.tocLink}>
+                <Text style={styles.tocLinkText}>Guide Sections</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+          
           <View style={styles.heroImageContainer}>
             <Image
               source={require('@/assets/images/overview.jpg')}
               style={styles.heroImage}
               resizeMode="cover"
             />
-            <View style={styles.heroOverlay}>
-              <Text style={styles.heroText}>Your Complete Guide to US University Applications</Text>
-            </View>
           </View>
           
-          <View style={styles.overviewContainer}>
-            <Text style={styles.overviewText}>
-              Harvard, Stanford, MIT…. We've all heard of these global powerhouses of American Universities, the ultimate goal for talented aspiring students. But how exactly, as a student in Canada, do you apply for these prestigious institutions?
+          <View ref={introductionRef} style={styles.sectionContainer}>
+            <Text style={styles.sectionTitle}>Introduction</Text>
+            <Text style={styles.description}>
+              Harvard, Stanford, MIT…. We've all heard of these global powerhouses of American Universities, 
+              the ultimate goal for talented aspiring students. But how exactly, as a student in Canada, 
+              do you apply for these prestigious institutions?
             </Text>
-            <Text style={styles.overviewText}>
-              Is just being at the top of your class enough? What do you have to do differently? Is it even possible to go to Harvard as a Canadian?
+            
+            <Text style={styles.description}>
+              Is just being at the top of your class enough? What do you have to do differently? 
+              Is it even possible to go to Harvard as a Canadian?
             </Text>
-            <Text style={styles.overviewText}>
+            
+            <Text style={styles.description}>
               Hopefully, these questions can be answered in SnowTrack's Comprehensive Canada to the United States Overview.
             </Text>
           </View>
 
-          <View style={styles.sectionContainer}>
-            <Text style={styles.sectionTitle}>Introduction</Text>
-            <Text style={styles.sectionText}>
-              Applying to universities in Canada focuses mostly on grades, specifically your top six Grade 12 U/M courses. However, American universities focus on a holistic view of the student, taking into consideration Grades, Course Rigor, Extracurriculars, Awards, Test Scores, Essays, Letters of Recommendation, and Personality.
+          <View ref={differencesRef} style={styles.sectionContainer}>
+            <Text style={styles.sectionTitle}>Canadian vs US Approach</Text>
+            <Text style={styles.description}>
+              Applying to universities in Canada focuses mostly on grades, specifically your top six Grade 12 U/M courses. 
+              However, American universities focus on a holistic view of the student, taking into consideration:
             </Text>
-            <Text style={styles.sectionText}>
-              If grades account for 70% of your application in Top Canadian Programs, those same grades account for maybe 10-15% for Top American Universities. Applying to top American schools isn't necessarily harder, but it is fundamentally different. Focusing entirely on your grades is no longer sufficient, and can end up getting you rejected from almost every top American university. Being excellent both in and outside of school is the most consistent ticket to the United States.
+            
+            <View style={styles.infoBox}>
+              <Text style={styles.infoTitle}>US University Considerations:</Text>
+              <Text style={styles.infoText}>• Grades and Academic Performance</Text>
+              <Text style={styles.infoText}>• Course Rigor and Difficulty</Text>
+              <Text style={styles.infoText}>• Extracurricular Activities</Text>
+              <Text style={styles.infoText}>• Awards and Recognition</Text>
+              <Text style={styles.infoText}>• Test Scores (SAT/ACT)</Text>
+              <Text style={styles.infoText}>• Essays and Personal Statements</Text>
+              <Text style={styles.infoText}>• Letters of Recommendation</Text>
+              <Text style={styles.infoText}>• Personal Character and Leadership</Text>
+            </View>
+            
+            <Text style={styles.description}>
+              If grades account for 70% of your application in Top Canadian Programs, those same grades account 
+              for maybe 10-15% for Top American Universities.
             </Text>
-            <Text style={styles.infographicNote}>→ Infographic on what Canadian Schools look at vs US Schools</Text>
-            <Text style={styles.sectionText}>
-              Before we get started on academics however, we must first consider the affordability of American schools.
+            
+            <Text style={styles.description}>
+              Applying to top American schools isn't necessarily harder, but it is fundamentally different. 
+              Focusing entirely on your grades is no longer sufficient, and can end up getting you rejected 
+              from almost every top American university.
             </Text>
-            <Text style={styles.sectionText}>
-              While post-secondary in Canada is relatively affordable, college in the States can cost up to $600,000 Canadian dollars. Please familiarize yourself with important Finances Information before continuing.
+            
+            <Text style={styles.description}>
+              Being excellent both in and outside of school is the most consistent ticket to the United States.
             </Text>
           </View>
 
-          <View style={styles.sectionsList}>
-            <Text style={styles.sectionsTitle}>Sections</Text>
-            <Text style={styles.sectionItem}>• What do American Universities Consider?</Text>
-            <Text style={styles.sectionItem}>• Am I Disadvantaged as a Canadian Student?</Text>
-            <Text style={styles.sectionItem}>• CommonApp vs OUAC</Text>
-            <Text style={styles.sectionItem}>• Is the United States Worth It?</Text>
+          <View ref={financialRealityRef} style={styles.sectionContainer}>
+            <Text style={styles.sectionTitle}>The Financial Reality</Text>
+            <Text style={styles.description}>
+              Before we get started on academics however, we must first consider the affordability of American schools. 
+              While post-secondary in Canada is relatively affordable, college in the States can cost up to 
+              <Text style={styles.boldText}> $600,000 Canadian dollars</Text>.
+            </Text>
+            
+            <Text style={styles.description}>
+              Please familiarize yourself with important Finances Information before continuing.
+            </Text>
+          </View>
+
+          <View ref={sectionsRef} style={styles.sectionContainer}>
+            <Text style={styles.sectionTitle}>Guide Sections</Text>
+            <Text style={styles.description}>
+              This comprehensive guide covers all aspects of applying to US universities from Canada:
+            </Text>
+            
+            <View style={styles.infoBox}>
+              <Text style={styles.infoTitle}>What do American Universities Consider?</Text>
+              <Text style={styles.infoText}>Understanding the holistic admissions process and what really matters</Text>
+            </View>
+            
+            <View style={styles.infoBox}>
+              <Text style={styles.infoTitle}>Am I Disadvantaged as a Canadian Student?</Text>
+              <Text style={styles.infoText}>Addressing common concerns about international student status</Text>
+            </View>
+            
+            <View style={styles.infoBox}>
+              <Text style={styles.infoTitle}>CommonApp vs OUAC</Text>
+              <Text style={styles.infoText}>Comparing the application systems and processes</Text>
+            </View>
+            
+            <View style={styles.infoBox}>
+              <Text style={styles.infoTitle}>Is the United States Worth It?</Text>
+              <Text style={styles.infoText}>Weighing the costs and benefits of studying in the US</Text>
+            </View>
           </View>
         </View>
       </Animated.ScrollView>
@@ -138,7 +251,7 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     zIndex: 10,
-    height: 80,
+    backgroundColor: '#f0f8ff',
   },
   headerTop: {
     height: 1,
@@ -148,8 +261,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingHorizontal: 32,
-    paddingVertical: 24,
+    paddingHorizontal: 20,
+    paddingVertical: 12,
     backgroundColor: '#f0f8ff',
   },
   headerLeft: {
@@ -157,25 +270,43 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   logo: {
-    marginRight: 20,
+    marginRight: 12,
   },
   headerLogo: {
-    width: 48,
-    height: 48,
+    width: 24,
+    height: 24,
   },
   brand: {
     flexDirection: 'row',
     alignItems: 'center',
   },
   brandName: {
-    fontSize: 32,
+    fontSize: 18,
     fontWeight: 'bold',
-    color: '#000000',
+    color: '#1f275c',
     fontFamily: 'Lato-Bold',
   },
   headerBottom: {
     height: 2,
     backgroundColor: '#4ccfff',
+  },
+  heroImageContainer: {
+    height: 300,
+    borderRadius: 12,
+    overflow: 'hidden',
+    marginBottom: 32,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    elevation: 4,
+  },
+  heroImage: {
+    width: '100%',
+    height: '100%',
   },
   container: {
     flex: 1,
@@ -215,17 +346,17 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   authorAvatar: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
-    backgroundColor: '#f0f8ff',
-    alignItems: 'center',
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: '#2563eb',
     justifyContent: 'center',
+    alignItems: 'center',
     marginRight: 12,
   },
   avatarLogo: {
-    width: 32,
-    height: 32,
+    width: 40,
+    height: 40,
   },
   authorDetails: {
     flex: 1,
@@ -235,131 +366,110 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#000000',
     fontFamily: 'Lato-Bold',
+    marginBottom: 2,
   },
   readTime: {
     fontSize: 14,
-    color: '#666666',
+    color: '#6b7280',
     fontFamily: 'Lato-Regular',
   },
   shareButton: {
     padding: 8,
-    borderRadius: 8,
-    backgroundColor: '#f0f8ff',
+    borderRadius: 4,
   },
   divider: {
-    height: 1,
-    backgroundColor: '#e0e0e0',
-    marginBottom: 32,
-  },
-  overviewContainer: {
-    backgroundColor: '#f8fafc',
-    borderRadius: 16,
-    padding: 24,
+    height: 2,
+    backgroundColor: '#2563eb',
     marginBottom: 24,
-    borderLeftWidth: 4,
-    borderLeftColor: '#2563eb',
+    borderRadius: 1,
+    shadowColor: '#2563eb',
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+    shadowOffset: { width: 0, height: 2 },
+    elevation: 3,
   },
-  overviewText: {
+  tocContainer: {
+    backgroundColor: '#f8faff',
+    borderRadius: 12,
+    padding: 20,
+    marginBottom: 24,
+    borderWidth: 1,
+    borderColor: '#e1f0ff',
+  },
+  tocTitle: {
     fontSize: 18,
-    color: '#25304A',
-    fontFamily: 'Lato-Regular',
-    textAlign: 'center',
+    fontWeight: 'bold',
+    color: '#000000',
     marginBottom: 16,
-    lineHeight: 26,
+    fontFamily: 'Lato-Bold',
+  },
+  tocLinks: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 12,
+  },
+  tocLink: {
+    backgroundColor: '#ffffff',
+    borderRadius: 8,
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    borderWidth: 1,
+    borderColor: '#d8d8d8',
+  },
+  tocLinkText: {
+    fontSize: 14,
+    color: '#1f275c',
+    fontFamily: 'Lato-Regular',
   },
   sectionContainer: {
-    backgroundColor: '#fff',
-    borderRadius: 16,
-    padding: 24,
-    marginBottom: 24,
-    shadowColor: '#b6d7f2',
-    shadowOpacity: 0.10,
-    shadowRadius: 8,
-    shadowOffset: { width: 0, height: 2 },
-    elevation: 1,
+    backgroundColor: '#f7faff',
+    borderRadius: 12,
+    paddingTop: 0,
+    paddingBottom: 20,
+    paddingHorizontal: 20,
+    marginBottom: 8,
+    borderWidth: 1,
+    borderColor: '#e1f0ff',
   },
   sectionTitle: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: '#25304A',
-    marginBottom: 16,
+    color: '#000000',
+    marginTop: 32,
+    marginBottom: 20,
     fontFamily: 'Lato-Bold',
-    textAlign: 'left',
   },
-  sectionText: {
+  description: {
     fontSize: 16,
-    color: '#25304A',
-    fontFamily: 'Lato-Regular',
-    textAlign: 'left',
-    marginBottom: 16,
+    color: '#000000',
     lineHeight: 24,
-  },
-  infographicNote: {
-    fontSize: 16,
-    color: '#2563eb',
-    fontFamily: 'Lato-Bold',
-    textAlign: 'center',
     marginBottom: 16,
-    fontStyle: 'italic',
-  },
-  sectionsList: {
-    backgroundColor: '#fff',
-    borderRadius: 16,
-    padding: 24,
-    marginBottom: 24,
-    shadowColor: '#b6d7f2',
-    shadowOpacity: 0.10,
-    shadowRadius: 8,
-    shadowOffset: { width: 0, height: 2 },
-    elevation: 1,
-  },
-  sectionsTitle: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#25304A',
-    marginBottom: 16,
-    fontFamily: 'Lato-Bold',
-    textAlign: 'left',
-  },
-  sectionItem: {
-    fontSize: 16,
-    color: '#25304A',
     fontFamily: 'Lato-Regular',
-    textAlign: 'left',
-    marginBottom: 8,
-    lineHeight: 24,
   },
-  heroImageContainer: {
-    height: 400,
-    borderRadius: 12,
-    overflow: 'hidden',
-    marginBottom: 32,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 4,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-    elevation: 4,
-  },
-  heroImage: {
-    width: '100%',
-    height: '100%',
-  },
-  heroOverlay: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    backgroundColor: 'rgba(0, 0, 0, 0.6)',
-    padding: 24,
-  },
-  heroText: {
-    color: '#fff',
-    fontSize: 24,
+  boldText: {
     fontWeight: 'bold',
     fontFamily: 'Lato-Bold',
-    textAlign: 'center',
+  },
+  infoBox: {
+    backgroundColor: '#ffffff',
+    borderRadius: 8,
+    padding: 16,
+    marginVertical: 16,
+    borderWidth: 1,
+    borderColor: '#e5e7eb',
+  },
+  infoTitle: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#000000',
+    marginBottom: 12,
+    fontFamily: 'Lato-Bold',
+  },
+  infoText: {
+    fontSize: 14,
+    color: '#000000',
+    lineHeight: 20,
+    marginBottom: 4,
+    fontFamily: 'Lato-Regular',
   },
 }); 

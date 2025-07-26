@@ -1,17 +1,19 @@
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Alert, Image, Animated, Share } from 'react-native';
 import { useRef, useState } from 'react';
 import { Feather } from '@expo/vector-icons';
+import { useRouter } from 'expo-router';
 
-export default function CommonAppPage() {
+export default function EarlyApplicationsPage() {
+  const router = useRouter();
   const scrollY = useRef(new Animated.Value(0)).current;
   const scrollViewRef = useRef<ScrollView>(null);
   const headerHeight = 80;
   
   // Section refs for navigation
-  const overviewRef = useRef<View>(null);
-  const personalInfoRef = useRef<View>(null);
-  const activitiesRef = useRef<View>(null);
-  const personalStatementRef = useRef<View>(null);
+  const understandingRef = useRef<View>(null);
+  const earlyDecisionRef = useRef<View>(null);
+  const earlyActionRef = useRef<View>(null);
+  const strategyRef = useRef<View>(null);
   
   const headerTranslateY = scrollY.interpolate({
     inputRange: [0, headerHeight],
@@ -21,13 +23,13 @@ export default function CommonAppPage() {
 
   const handleShare = async () => {
     try {
-      const url = 'https://snowtrack.app/us/commonApp';
-      const message = 'Check out this comprehensive guide to the Common Application for US universities: ' + url;
+      const url = 'https://snowtrack.app/us/earlyApplications';
+      const message = 'Check out this comprehensive guide to Early Applications for US universities: ' + url;
       
       const result = await Share.share({
         message: message,
         url: url,
-        title: 'Common Application Guide'
+        title: 'Early Applications Guide'
       });
       
       if (result.action === Share.sharedAction) {
@@ -70,6 +72,9 @@ export default function CommonAppPage() {
         <View style={styles.headerTop} />
         <View style={styles.headerContent}>
           <View style={styles.headerLeft}>
+            <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
+              <Feather name="arrow-left" size={24} color="#25304A" />
+            </TouchableOpacity>
             <View style={styles.logo}>
               <Image
                 source={require('@/assets/images/SnowTrackTransparent.png')}
@@ -81,6 +86,7 @@ export default function CommonAppPage() {
               <Text style={styles.brandName}>Snowtrack</Text>
             </View>
           </View>
+          <Text style={styles.headerTitle}>Early Applications</Text>
         </View>
         <View style={styles.headerBottom} />
       </Animated.View>
@@ -95,8 +101,8 @@ export default function CommonAppPage() {
         scrollEventThrottle={16}
       >
         <View style={styles.content}>
-          <Text style={styles.title}>The Common Application</Text>
-          <Text style={styles.subtitle}>Streamlining Your US University Applications</Text>
+          <Text style={styles.title}>Early Applications</Text>
+          <Text style={styles.subtitle}>Strategic Timing for US University Admissions</Text>
           
           <View style={styles.authorSection}>
             <View style={styles.authorInfo}>
@@ -109,7 +115,7 @@ export default function CommonAppPage() {
               </View>
               <View style={styles.authorDetails}>
                 <Text style={styles.authorName}>Snowtrack Advisor</Text>
-                <Text style={styles.readTime}>10 min read • Updated Jan 2025</Text>
+                <Text style={styles.readTime}>6 min read • Updated Jan 2025</Text>
               </View>
             </View>
             <TouchableOpacity onPress={handleShare} style={styles.shareButton}>
@@ -123,126 +129,120 @@ export default function CommonAppPage() {
           <View style={styles.tocContainer}>
             <Text style={styles.tocTitle}>Quick Navigation</Text>
             <View style={styles.tocLinks}>
-              <TouchableOpacity onPress={() => scrollToSection(overviewRef)} style={styles.tocLink}>
-                <Text style={styles.tocLinkText}>Overview</Text>
+              <TouchableOpacity onPress={() => scrollToSection(understandingRef)} style={styles.tocLink}>
+                <Text style={styles.tocLinkText}>Understanding Early Apps</Text>
               </TouchableOpacity>
-              <TouchableOpacity onPress={() => scrollToSection(personalInfoRef)} style={styles.tocLink}>
-                <Text style={styles.tocLinkText}>Personal Information</Text>
+              <TouchableOpacity onPress={() => scrollToSection(earlyDecisionRef)} style={styles.tocLink}>
+                <Text style={styles.tocLinkText}>Early Decision</Text>
               </TouchableOpacity>
-              <TouchableOpacity onPress={() => scrollToSection(activitiesRef)} style={styles.tocLink}>
-                <Text style={styles.tocLinkText}>Activities & Honors</Text>
+              <TouchableOpacity onPress={() => scrollToSection(earlyActionRef)} style={styles.tocLink}>
+                <Text style={styles.tocLinkText}>Early Action</Text>
               </TouchableOpacity>
-              <TouchableOpacity onPress={() => scrollToSection(personalStatementRef)} style={styles.tocLink}>
-                <Text style={styles.tocLinkText}>Personal Statement</Text>
+              <TouchableOpacity onPress={() => scrollToSection(strategyRef)} style={styles.tocLink}>
+                <Text style={styles.tocLinkText}>Strategy</Text>
               </TouchableOpacity>
             </View>
           </View>
           
           <View style={styles.heroImageContainer}>
             <Image
-              source={require('@/assets/images/commonApp.jpg')}
+              source={require('@/assets/images/earlyApplications.jpg')}
               style={styles.heroImage}
               resizeMode="cover"
             />
           </View>
           
-          <View ref={overviewRef} style={styles.sectionContainer}>
-            <Text style={styles.sectionTitle}>What is the Common Application?</Text>
+          <View ref={understandingRef} style={styles.sectionContainer}>
+            <Text style={styles.sectionTitle}>Understanding Early Applications</Text>
             <Text style={styles.description}>
-              Using the Common Application (CommonApp) is the most efficient way to apply to US Universities. 
-              Almost every significant American university can be applied to utilizing the CommonApp, significantly 
-              streamlining the application process.
+              Early applications can significantly increase your chances of admission to top US universities. 
+              Understanding the different types of early applications and their strategic implications is crucial 
+              for Canadian students applying to American institutions.
             </Text>
-            
-            <Text style={styles.description}>
-              Instead of having to fill in twenty different sets of personal and academic information, 
-              the CommonApp standardizes the process, saving you dozens of hours in the application process.
-            </Text>
-            
-            <View style={styles.infoBox}>
-              <Text style={styles.infoTitle}>Key Benefits:</Text>
-              <Text style={styles.infoText}>• Apply to 1,000+ colleges with one application</Text>
-              <Text style={styles.infoText}>• Standardized personal information section</Text>
-              <Text style={styles.infoText}>• Centralized activities and honors tracking</Text>
-              <Text style={styles.infoText}>• Single personal statement for all schools</Text>
-              <Text style={styles.infoText}>• Streamlined recommendation system</Text>
-            </View>
           </View>
 
-          <View ref={personalInfoRef} style={styles.sectionContainer}>
-            <Text style={styles.sectionTitle}>Personal Information</Text>
+          <View ref={earlyDecisionRef} style={styles.sectionContainer}>
+            <Text style={styles.sectionTitle}>Early Decision (ED)</Text>
             <Text style={styles.description}>
-              Your personal information includes information such as your demographics, the school you went to, 
-              your parent's educational background, and more.
-            </Text>
-            
-            <Text style={styles.description}>
-              While there is some information within this section that can affect your overall application, 
-              much of it is unchangeable (ex. Your Race), and should be answered as precisely as possible.
+              Early Decision is a binding agreement between you and the university. If accepted, you must attend 
+              that institution and withdraw all other applications.
             </Text>
             
             <View style={styles.infoBox}>
-              <Text style={styles.infoTitle}>Required Information:</Text>
-              <Text style={styles.infoText}>• Personal demographics and contact details</Text>
-              <Text style={styles.infoText}>• High school information and GPA</Text>
-              <Text style={styles.infoText}>• Parent/guardian education and occupation</Text>
-              <Text style={styles.infoText}>• Household income and financial aid needs</Text>
-              <Text style={styles.infoText}>• Citizenship and residency status</Text>
+              <Text style={styles.infoTitle}>Key Features:</Text>
+              <Text style={styles.infoText}>• Binding commitment if accepted</Text>
+              <Text style={styles.infoText}>• Higher acceptance rates (often 2-3x higher)</Text>
+              <Text style={styles.infoText}>• Application deadline: November 1st</Text>
+              <Text style={styles.infoText}>• Decision notification: Mid-December</Text>
+              <Text style={styles.infoText}>• Can only apply to one ED school</Text>
             </View>
+            
+            <Text style={styles.description}>
+              <Text style={styles.boldText}>Strategy:</Text> Choose your absolute top choice school for ED. 
+              This should be a school where you would be happy to attend regardless of financial aid offers.
+            </Text>
           </View>
 
-          <View ref={activitiesRef} style={styles.sectionContainer}>
-            <Text style={styles.sectionTitle}>Activities & Honors</Text>
+          <View ref={earlyActionRef} style={styles.sectionContainer}>
+            <Text style={styles.sectionTitle}>Early Action (EA)</Text>
             <Text style={styles.description}>
-              Your Activities and Honors are where you have more control over the information you present. 
-              The CommonApp allows you to report ten distinct activities (extracurriculars) along with five 
-              academic honors (awards).
-            </Text>
-            
-            <Text style={styles.description}>
-              In contrast to Canadian Universities, which often make you report your ECs through essays, 
-              the CommonApp allows you to directly explain your EC and impact.
+              Early Action is non-binding, meaning you can apply to multiple EA schools and still choose 
+              which one to attend if accepted.
             </Text>
             
             <View style={styles.infoBox}>
-              <Text style={styles.infoTitle}>Activity Categories:</Text>
-              <Text style={styles.infoText}>• Academic (clubs, competitions, research)</Text>
-              <Text style={styles.infoText}>• Athletics (sports, fitness, team leadership)</Text>
-              <Text style={styles.infoText}>• Arts (music, theater, visual arts)</Text>
-              <Text style={styles.infoText}>• Community Service (volunteering, social impact)</Text>
-              <Text style={styles.infoText}>• Work Experience (jobs, internships)</Text>
+              <Text style={styles.infoTitle}>Key Features:</Text>
+              <Text style={styles.infoText}>• Non-binding commitment</Text>
+              <Text style={styles.infoText}>• Can apply to multiple EA schools</Text>
+              <Text style={styles.infoText}>• Application deadline: November 1st</Text>
+              <Text style={styles.infoText}>• Decision notification: Mid-December</Text>
+              <Text style={styles.infoText}>• More flexibility than ED</Text>
             </View>
+            
+            <Text style={styles.description}>
+              <Text style={styles.boldText}>Strategy:</Text> Use EA for schools you're interested in but 
+              aren't your top choice. This gives you early acceptances and reduces stress during regular decision.
+            </Text>
           </View>
 
-          <View ref={personalStatementRef} style={styles.sectionContainer}>
-            <Text style={styles.sectionTitle}>Personal Statement</Text>
+          <View ref={strategyRef} style={styles.sectionContainer}>
+            <Text style={styles.sectionTitle}>Strategic Considerations</Text>
             <Text style={styles.description}>
-              Your Personal Statement, also known as the CommonApp essay, is one of the most crucial elements 
-              of your college application process. The personal statement is a singular essay, up to 650 words, 
-              that should give post-secondary institutions some insight into your life, character and personality.
+              <Text style={styles.boldText}>Financial Aid:</Text> If you need significant financial aid, 
+              be cautious with ED as you're committed to attend regardless of the aid package offered.
             </Text>
             
             <Text style={styles.description}>
-              Unlike Canadian universities, the Personal Statement is not intended to be a brag sheet. 
-              You are not encouraged to just talk about academics, but rather real-world experiences that 
-              have shaped your personality and worldview.
+              <Text style={styles.boldText}>Application Strength:</Text> Only apply early if your application 
+              is strong and complete. Early applications are often more competitive than regular decision.
             </Text>
             
-            <View style={styles.infoBox}>
-              <Text style={styles.infoTitle}>2025-26 Essay Prompts:</Text>
-              <Text style={styles.essayPrompt}>1. Some students have a background, identity, interest, or talent that is so meaningful they believe their application would be incomplete without it. If this sounds like you, then please share your story.</Text>
-              <Text style={styles.essayPrompt}>2. The lessons we take from obstacles we encounter can be fundamental to later success. Recount a time when you faced a challenge, setback, or failure. How did it affect you, and what did you learn from the experience?</Text>
-              <Text style={styles.essayPrompt}>3. Reflect on a time when you questioned or challenged a belief or idea. What prompted your thinking? What was the outcome?</Text>
-              <Text style={styles.essayPrompt}>4. Reflect on something that someone has done for you that has made you happy or thankful in a surprising way. How has this gratitude affected or motivated you?</Text>
-              <Text style={styles.essayPrompt}>5. Discuss an accomplishment, event, or realization that sparked a period of personal growth and a new understanding of yourself or others.</Text>
-              <Text style={styles.essayPrompt}>6. Describe a topic, idea, or concept you find so engaging that it makes you lose all track of time. Why does it captivate you? What or who do you turn to when you want to learn more?</Text>
-              <Text style={styles.essayPrompt}>7. Share an essay on any topic of your choice. It can be one you've already written, one that responds to a different prompt, or one of your own design.</Text>
-            </View>
+            <Text style={styles.description}>
+              <Text style={styles.boldText}>Timeline:</Text> Early applications require you to have all 
+              materials ready by November 1st, including test scores, essays, and recommendations.
+            </Text>
+          </View>
+
+          <View style={styles.sectionContainer}>
+            <Text style={styles.sectionTitle}>Success Strategies</Text>
+            <Text style={styles.description}>
+              <Text style={styles.boldText}>1. Research Thoroughly:</Text> Understand each school's 
+              early application policies and acceptance rates.
+            </Text>
             
             <Text style={styles.description}>
-              <Text style={styles.boldText}>Writing Tips:</Text> A truly effective Personal Statement takes 
-              real-world experiences and describes how they interact with your academic background. Focus on 
-              storytelling, authenticity, and showing your unique perspective.
+              <Text style={styles.boldText}>2. Prepare Early:</Text> Start working on your applications 
+              during the summer before senior year.
+            </Text>
+            
+            <Text style={styles.description}>
+              <Text style={styles.boldText}>3. Choose Wisely:</Text> For ED, pick a school you'd be 
+              genuinely happy to attend. For EA, apply to schools where you have a realistic chance.
+            </Text>
+            
+            <Text style={styles.description}>
+              <Text style={styles.boldText}>4. Stay Organized:</Text> Keep track of deadlines, requirements, 
+              and submission status for each school.
             </Text>
           </View>
         </View>
@@ -276,6 +276,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
   },
+  backButton: {
+    padding: 8,
+    marginRight: 12,
+  },
   logo: {
     marginRight: 12,
   },
@@ -291,6 +295,12 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
     color: '#1f275c',
+    fontFamily: 'Lato-Bold',
+  },
+  headerTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#25304A',
     fontFamily: 'Lato-Bold',
   },
   headerBottom: {
@@ -478,13 +488,5 @@ const styles = StyleSheet.create({
     lineHeight: 20,
     marginBottom: 4,
     fontFamily: 'Lato-Regular',
-  },
-  essayPrompt: {
-    fontSize: 14,
-    color: '#000000',
-    lineHeight: 20,
-    marginBottom: 8,
-    fontFamily: 'Lato-Regular',
-    fontStyle: 'italic',
   },
 }); 
