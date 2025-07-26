@@ -8,11 +8,14 @@ export default function EarlyApplicationsPage() {
   const scrollY = useRef(new Animated.Value(0)).current;
   const scrollViewRef = useRef<ScrollView>(null);
   const headerHeight = 80;
+  const [showEDIISchools, setShowEDIISchools] = useState(false);
   
   // Section refs for navigation
   const understandingRef = useRef<View>(null);
   const earlyDecisionRef = useRef<View>(null);
+  const earlyDecisionIIRef = useRef<View>(null);
   const earlyActionRef = useRef<View>(null);
+  const regularDecisionRef = useRef<View>(null);
   const strategyRef = useRef<View>(null);
   
   const headerTranslateY = scrollY.interpolate({
@@ -135,8 +138,14 @@ export default function EarlyApplicationsPage() {
               <TouchableOpacity onPress={() => scrollToSection(earlyDecisionRef)} style={styles.tocLink}>
                 <Text style={styles.tocLinkText}>Early Decision</Text>
               </TouchableOpacity>
+              <TouchableOpacity onPress={() => scrollToSection(earlyDecisionIIRef)} style={styles.tocLink}>
+                <Text style={styles.tocLinkText}>Early Decision II</Text>
+              </TouchableOpacity>
               <TouchableOpacity onPress={() => scrollToSection(earlyActionRef)} style={styles.tocLink}>
                 <Text style={styles.tocLinkText}>Early Action</Text>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={() => scrollToSection(regularDecisionRef)} style={styles.tocLink}>
+                <Text style={styles.tocLinkText}>Regular Decision</Text>
               </TouchableOpacity>
               <TouchableOpacity onPress={() => scrollToSection(strategyRef)} style={styles.tocLink}>
                 <Text style={styles.tocLinkText}>Strategy</Text>
@@ -155,53 +164,189 @@ export default function EarlyApplicationsPage() {
           <View ref={understandingRef} style={styles.sectionContainer}>
             <Text style={styles.sectionTitle}>Understanding Early Applications</Text>
             <Text style={styles.description}>
-              Early applications can significantly increase your chances of admission to top US universities. 
-              Understanding the different types of early applications and their strategic implications is crucial 
-              for Canadian students applying to American institutions.
+              Unlike Canada, where early applications quite literally refer to applying early, there are distinct 
+              waves of applications for American universities. Understanding, and strategically utilizing the 
+              different types of applications is crucial for applying to American institutions.
             </Text>
           </View>
 
           <View ref={earlyDecisionRef} style={styles.sectionContainer}>
             <Text style={styles.sectionTitle}>Early Decision (ED)</Text>
             <Text style={styles.description}>
-              Early Decision is a binding agreement between you and the university. If accepted, you must attend 
-              that institution and withdraw all other applications.
+              Early decision is the most restrictive, yet most important phase of applying to college. Early 
+              Decision is a binding agreement between you and the university. If accepted, you must attend that 
+              institution and withdraw all other applications. In exchange, you are offered significantly higher 
+              acceptance rates, often a 2-3x boost.
             </Text>
             
-            <View style={styles.infoBox}>
-              <Text style={styles.infoTitle}>Key Features:</Text>
-              <Text style={styles.infoText}>• Binding commitment if accepted</Text>
-              <Text style={styles.infoText}>• Higher acceptance rates (often 2-3x higher)</Text>
-              <Text style={styles.infoText}>• Application deadline: November 1st</Text>
-              <Text style={styles.infoText}>• Decision notification: Mid-December</Text>
-              <Text style={styles.infoText}>• Can only apply to one ED school</Text>
+            <View style={styles.keyPointsTable}>
+              <Text style={styles.tableTitle}>Key Points</Text>
+              <View style={styles.tableRow}>
+                <Text style={styles.tableLabel}>Commitment:</Text>
+                <Text style={styles.tableValue}>Binding</Text>
+              </View>
+              <View style={styles.tableRow}>
+                <Text style={styles.tableLabel}>Multiple Applications:</Text>
+                <Text style={styles.tableValue}>No, only one ED school</Text>
+              </View>
+              <View style={styles.tableRow}>
+                <Text style={styles.tableLabel}>Deadline:</Text>
+                <Text style={styles.tableValue}>November 1st</Text>
+              </View>
+              <View style={styles.tableRow}>
+                <Text style={styles.tableLabel}>Decision Notification:</Text>
+                <Text style={styles.tableValue}>Mid-December</Text>
+              </View>
             </View>
             
             <Text style={styles.description}>
               <Text style={styles.boldText}>Strategy:</Text> Choose your absolute top choice school for ED. 
               This should be a school where you would be happy to attend regardless of financial aid offers.
             </Text>
+            
+            <Text style={styles.note}>
+              <Text style={styles.boldText}>Note:</Text> Also known as "REA (Restrictive Early Action)" at some schools.
+            </Text>
+          </View>
+
+          <View ref={earlyDecisionIIRef} style={styles.sectionContainer}>
+            <Text style={styles.sectionTitle}>Early Decision II (ED II)</Text>
+            <Text style={styles.description}>
+              Early Decision II is a second binding application option offered by some schools. It functions 
+              similarly to Early Decision I but with a later deadline, typically in January.
+            </Text>
+            
+            <Text style={styles.description}>
+              ED II is perfect for students who were deferred or rejected from their ED I school, or for those 
+              who weren't ready to commit to a binding decision in November. It offers the same binding 
+              commitment and potential acceptance rate boost as ED I.
+            </Text>
+            
+            <View style={styles.keyPointsTable}>
+              <Text style={styles.tableTitle}>Key Points</Text>
+              <View style={styles.tableRow}>
+                <Text style={styles.tableLabel}>Commitment:</Text>
+                <Text style={styles.tableValue}>Binding</Text>
+              </View>
+              <View style={styles.tableRow}>
+                <Text style={styles.tableLabel}>Multiple Applications:</Text>
+                <Text style={styles.tableValue}>No, only one ED II school</Text>
+              </View>
+              <View style={styles.tableRow}>
+                <Text style={styles.tableLabel}>Deadline:</Text>
+                <Text style={styles.tableValue}>January 1st - January 15th</Text>
+              </View>
+              <View style={styles.tableRow}>
+                <Text style={styles.tableLabel}>Decision Notification:</Text>
+                <Text style={styles.tableValue}>February - March</Text>
+              </View>
+            </View>
+            
+            <Text style={styles.description}>
+              <Text style={styles.boldText}>Strategy:</Text> Use ED II if you were deferred from ED I or if 
+              you've found a new top choice school. This gives you a second chance at the binding commitment 
+              advantage while still applying early.
+            </Text>
+            
+            <View style={styles.dropdownContainer}>
+              <TouchableOpacity 
+                style={styles.dropdownHeader}
+                onPress={() => setShowEDIISchools(!showEDIISchools)}
+              >
+                <Text style={styles.dropdownTitle}>Significant ED II Schools</Text>
+                <Feather 
+                  name={showEDIISchools ? "chevron-up" : "chevron-down"} 
+                  size={20} 
+                  color="#2563eb" 
+                />
+              </TouchableOpacity>
+              {showEDIISchools && (
+                <View style={styles.dropdownContent}>
+                  <Text style={styles.dropdownItem}>• University of Chicago</Text>
+                  <Text style={styles.dropdownItem}>• Vanderbilt University</Text>
+                  <Text style={styles.dropdownItem}>• Washington University in St. Louis</Text>
+                  <Text style={styles.dropdownItem}>• Emory University</Text>
+                  <Text style={styles.dropdownItem}>• New York University</Text>
+                  <Text style={styles.dropdownItem}>• Carnegie Mellon University</Text>
+                  <Text style={styles.dropdownItem}>• Boston College</Text>
+                  <Text style={styles.dropdownItem}>• Boston University</Text>
+                  <Text style={styles.dropdownItem}>• Villanova University</Text>
+                </View>
+              )}
+            </View>
           </View>
 
           <View ref={earlyActionRef} style={styles.sectionContainer}>
             <Text style={styles.sectionTitle}>Early Action (EA)</Text>
             <Text style={styles.description}>
-              Early Action is non-binding, meaning you can apply to multiple EA schools and still choose 
-              which one to attend if accepted.
+              Early action is a non-binding, early wave of applications. Schools offer EA as a way to recieve 
+              applications ahead of the December/January rush schedule, and may offer an increased acceptance 
+              rate in return. For students, EA is a great way to get applications out of the way before the 
+              Regular Decision wave.
             </Text>
             
-            <View style={styles.infoBox}>
-              <Text style={styles.infoTitle}>Key Features:</Text>
-              <Text style={styles.infoText}>• Non-binding commitment</Text>
-              <Text style={styles.infoText}>• Can apply to multiple EA schools</Text>
-              <Text style={styles.infoText}>• Application deadline: November 1st</Text>
-              <Text style={styles.infoText}>• Decision notification: Mid-December</Text>
-              <Text style={styles.infoText}>• More flexibility than ED</Text>
+            <View style={styles.keyPointsTable}>
+              <Text style={styles.tableTitle}>Key Points</Text>
+              <View style={styles.tableRow}>
+                <Text style={styles.tableLabel}>Commitment:</Text>
+                <Text style={styles.tableValue}>Non-binding</Text>
+              </View>
+              <View style={styles.tableRow}>
+                <Text style={styles.tableLabel}>Multiple Applications:</Text>
+                <Text style={styles.tableValue}>Yes, can apply to multiple EA schools</Text>
+              </View>
+              <View style={styles.tableRow}>
+                <Text style={styles.tableLabel}>Deadline:</Text>
+                <Text style={styles.tableValue}>November 1st</Text>
+              </View>
+              <View style={styles.tableRow}>
+                <Text style={styles.tableLabel}>Decision Notification:</Text>
+                <Text style={styles.tableValue}>Mid-December</Text>
+              </View>
             </View>
             
             <Text style={styles.description}>
               <Text style={styles.boldText}>Strategy:</Text> Use EA for schools you're interested in but 
               aren't your top choice. This gives you early acceptances and reduces stress during regular decision.
+            </Text>
+          </View>
+
+          <View ref={regularDecisionRef} style={styles.sectionContainer}>
+            <Text style={styles.sectionTitle}>Regular Decision (RD)</Text>
+            <Text style={styles.description}>
+              Regular Decision is the standard application timeline for most US universities. This is the most 
+              common application period and offers the most flexibility for students.
+            </Text>
+            
+            <Text style={styles.description}>
+              Regular Decision applications are non-binding, meaning you can apply to multiple schools and 
+              choose which one to attend after receiving all your acceptances and financial aid offers.
+            </Text>
+            
+            <View style={styles.keyPointsTable}>
+              <Text style={styles.tableTitle}>Key Points</Text>
+              <View style={styles.tableRow}>
+                <Text style={styles.tableLabel}>Commitment:</Text>
+                <Text style={styles.tableValue}>Non-binding</Text>
+              </View>
+              <View style={styles.tableRow}>
+                <Text style={styles.tableLabel}>Multiple Applications:</Text>
+                <Text style={styles.tableValue}>Yes, unlimited schools</Text>
+              </View>
+              <View style={styles.tableRow}>
+                <Text style={styles.tableLabel}>Deadline:</Text>
+                <Text style={styles.tableValue}>January 1st - February 1st</Text>
+              </View>
+              <View style={styles.tableRow}>
+                <Text style={styles.tableLabel}>Decision Notification:</Text>
+                <Text style={styles.tableValue}>March - April</Text>
+              </View>
+            </View>
+            
+            <Text style={styles.description}>
+              <Text style={styles.boldText}>Strategy:</Text> Use Regular Decision for your remaining schools 
+              after applying early. This gives you time to compare financial aid offers and make the best 
+              decision for your future.
             </Text>
           </View>
 
@@ -483,6 +628,92 @@ const styles = StyleSheet.create({
     fontFamily: 'Lato-Bold',
   },
   infoText: {
+    fontSize: 14,
+    color: '#000000',
+    lineHeight: 20,
+    marginBottom: 4,
+    fontFamily: 'Lato-Regular',
+  },
+  keyPointsTable: {
+    backgroundColor: '#ffffff',
+    borderRadius: 8,
+    padding: 0,
+    marginVertical: 16,
+    borderWidth: 2,
+    borderColor: '#2563eb',
+  },
+  tableTitle: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#000000',
+    marginBottom: 12,
+    fontFamily: 'Lato-Bold',
+    paddingHorizontal: 16,
+    paddingTop: 16,
+  },
+  tableRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: '#e5e7eb',
+  },
+  tableLabel: {
+    fontSize: 14,
+    color: '#25304A',
+    fontFamily: 'Lato-Regular',
+    flex: 1,
+  },
+  tableValue: {
+    fontSize: 14,
+    fontWeight: 'bold',
+    color: '#2563eb',
+    fontFamily: 'Lato-Bold',
+    flex: 1,
+    textAlign: 'right',
+  },
+  note: {
+    fontSize: 14,
+    color: '#6b7280',
+    fontStyle: 'italic',
+    fontFamily: 'Lato-Regular',
+    marginTop: 8,
+    paddingLeft: 8,
+    borderLeftWidth: 3,
+    borderLeftColor: '#2563eb',
+  },
+  dropdownContainer: {
+    backgroundColor: '#ffffff',
+    borderRadius: 8,
+    marginTop: 16,
+    marginBottom: 0,
+    borderWidth: 1,
+    borderColor: '#e5e7eb',
+    overflow: 'hidden',
+  },
+  dropdownHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    backgroundColor: '#f8faff',
+  },
+  dropdownTitle: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#000000',
+    fontFamily: 'Lato-Bold',
+  },
+  dropdownContent: {
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    borderTopWidth: 1,
+    borderTopColor: '#e5e7eb',
+  },
+  dropdownItem: {
     fontSize: 14,
     color: '#000000',
     lineHeight: 20,
