@@ -40,7 +40,7 @@ export default function LandingScreen() {
   return (
     <LinearGradient
       colors={['#1f275c', '#4ccfff']}
-      style={styles.container}
+      style={[styles.container, { overflow: 'visible' }]}
     >
       <Snowfall />
       {/* Logo and Title */}
@@ -89,6 +89,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingTop: 0,
     marginTop: -60,
+    overflow: 'visible',
+    position: 'relative',
   },
   logoContainer: {
     alignItems: 'center',
@@ -105,7 +107,7 @@ const styles = StyleSheet.create({
   heading: {
     color: '#fff',
     fontSize: 32,
-    fontFamily: 'Poppins-Regular',
+    fontFamily: 'Lato-Regular',
     textAlign: 'center',
     marginBottom: 24,
     marginTop: 0,

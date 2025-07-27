@@ -25,18 +25,7 @@ export default function RootLayout() {
   const [loaded, error] = useFonts({
     'Lato-Regular': require('../assets/fonts/Lato-Regular.ttf'),
     'Lato-Bold': require('../assets/fonts/Lato-Bold.ttf'),
-    'Lato-Black': require('../assets/fonts/Lato-Black.ttf'),
     'Lato-Italic': require('../assets/fonts/Lato-Italic.ttf'),
-    'Lato-BoldItalic': require('../assets/fonts/Lato-BoldItalic.ttf'),
-    'Lato-BlackItalic': require('../assets/fonts/Lato-BlackItalic.ttf'),
-    'Lato-Light': require('../assets/fonts/Lato-Light.ttf'),
-    'Lato-LightItalic': require('../assets/fonts/Lato-LightItalic.ttf'),
-    'Lato-Thin': require('../assets/fonts/Lato-Thin.ttf'),
-    'Lato-ThinItalic': require('../assets/fonts/Lato-ThinItalic.ttf'),
-    'Poppins-Regular': require('../assets/fonts/Poppins-Regular.ttf'),
-    'Poppins-Bold': require('../assets/fonts/Poppins-Bold.ttf'),
-    'Poppins-Medium': require('../assets/fonts/Poppins-Medium.ttf'),
-    'Poppins-SemiBold': require('../assets/fonts/Poppins-SemiBold.ttf'),
     ...FontAwesome.font,
   });
 
