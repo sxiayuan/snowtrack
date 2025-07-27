@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Alert, Image, Animated, Share } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Alert, Image, Animated, Share, Pressable } from 'react-native';
 import { useRef, useState } from 'react';
 import { Feather } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
@@ -71,28 +71,15 @@ export default function EarlyApplicationsPage() {
   return (
     <View style={{ flex: 1, backgroundColor: '#9BC4E8' }}>
       {/* Header */}
-      <Animated.View style={[styles.header, { transform: [{ translateY: headerTranslateY }] }]}>
-        <View style={styles.headerTop} />
-        <View style={styles.headerContent}>
-          <View style={styles.headerLeft}>
-            <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
-              <Feather name="arrow-left" size={24} color="#25304A" />
-            </TouchableOpacity>
-            <View style={styles.logo}>
-              <Image
-                source={require('@/assets/images/SnowTrackTransparent.png')}
-                style={styles.headerLogo}
-                resizeMode="contain"
-              />
-            </View>
-            <View style={styles.brand}>
-              <Text style={styles.brandName}>Snowtrack</Text>
-            </View>
-          </View>
-          <Text style={styles.headerTitle}>Early Applications</Text>
-        </View>
-        <View style={styles.headerBottom} />
-      </Animated.View>
+      <View style={styles.header}>
+        <Pressable
+          onPress={() => router.replace('/us')}
+          style={styles.backButton}
+        >
+          <Feather name="arrow-left" size={24} color="#1E2A57" />
+        </Pressable>
+        <Text style={styles.headerTitle}>Applications</Text>
+      </View>
       
       <Animated.ScrollView 
         ref={scrollViewRef}
@@ -398,12 +385,13 @@ export default function EarlyApplicationsPage() {
 
 const styles = StyleSheet.create({
   header: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    zIndex: 10,
-    backgroundColor: '#f0f8ff',
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 24,
+    paddingVertical: 16,
+    backgroundColor: '#fff',
+    borderBottomWidth: 2,
+    borderBottomColor: '#9BC4E8',
   },
   headerTop: {
     height: 1,
@@ -423,7 +411,7 @@ const styles = StyleSheet.create({
   },
   backButton: {
     padding: 8,
-    marginRight: 12,
+    marginRight: 16,
   },
   logo: {
     marginRight: 12,
@@ -443,9 +431,9 @@ const styles = StyleSheet.create({
     fontFamily: 'Lato-Bold',
   },
   headerTitle: {
-    fontSize: 18,
+    fontSize: 24,
     fontWeight: 'bold',
-    color: '#25304A',
+    color: '#1E2A57',
     fontFamily: 'Lato-Bold',
   },
   headerBottom: {
@@ -476,7 +464,7 @@ const styles = StyleSheet.create({
   },
   content: {
     padding: 24,
-    paddingTop: 140,
+    paddingTop: 40,
     maxWidth: 900,
     alignSelf: 'center',
     width: '100%',

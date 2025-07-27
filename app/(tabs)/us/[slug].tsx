@@ -15,6 +15,14 @@ export default function USCategoryPage() {
     if (slug === 'overview') {
       router.replace('/us/overview');
     }
+    // Redirect us-vs-ca to the actual US vs CA page
+    if (slug === 'us-vs-ca') {
+      router.replace('/us/why-america');
+    }
+    // Redirect applications to the actual Early Applications page
+    if (slug === 'applications') {
+      router.replace('/us/earlyApplications');
+    }
   }, [slug, router]);
 
   return (

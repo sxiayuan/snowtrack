@@ -1,8 +1,10 @@
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Alert, Image, Animated, Share } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Alert, Image, Animated, Share, Pressable } from 'react-native';
 import { useRef, useState } from 'react';
 import { Feather } from '@expo/vector-icons';
+import { useRouter } from 'expo-router';
 
 export default function OverviewPage() {
+  const router = useRouter();
   const scrollY = useRef(new Animated.Value(0)).current;
   const scrollViewRef = useRef<ScrollView>(null);
   const headerHeight = 80;
@@ -66,24 +68,15 @@ export default function OverviewPage() {
   return (
     <View style={{ flex: 1, backgroundColor: '#9BC4E8' }}>
       {/* Header */}
-      <Animated.View style={[styles.header, { transform: [{ translateY: headerTranslateY }] }]}>
-        <View style={styles.headerTop} />
-        <View style={styles.headerContent}>
-          <View style={styles.headerLeft}>
-            <View style={styles.logo}>
-              <Image
-                source={require('@/assets/images/SnowTrackTransparent.png')}
-                style={styles.headerLogo}
-                resizeMode="contain"
-              />
-            </View>
-            <View style={styles.brand}>
-              <Text style={styles.brandName}>Snowtrack</Text>
-            </View>
-          </View>
-        </View>
-        <View style={styles.headerBottom} />
-      </Animated.View>
+      <View style={styles.header}>
+        <Pressable
+          onPress={() => router.replace('/us')}
+          style={styles.backButton}
+        >
+          <Feather name="arrow-left" size={24} color="#1E2A57" />
+        </Pressable>
+        <Text style={styles.headerTitle}>Overview</Text>
+      </View>
       
       <Animated.ScrollView 
         ref={scrollViewRef}
@@ -246,12 +239,23 @@ export default function OverviewPage() {
 
 const styles = StyleSheet.create({
   header: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    zIndex: 10,
-    backgroundColor: '#f0f8ff',
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 24,
+    paddingVertical: 16,
+    backgroundColor: '#fff',
+    borderBottomWidth: 2,
+    borderBottomColor: '#9BC4E8',
+  },
+  backButton: {
+    padding: 8,
+    marginRight: 16,
+  },
+  headerTitle: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#1E2A57',
+    fontFamily: 'Lato-Bold',
   },
   headerTop: {
     height: 1,
@@ -314,7 +318,7 @@ const styles = StyleSheet.create({
   },
   content: {
     padding: 24,
-    paddingTop: 140,
+    paddingTop: 40,
     maxWidth: 900,
     alignSelf: 'center',
     width: '100%',

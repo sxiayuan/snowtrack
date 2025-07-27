@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { StyleSheet, TouchableOpacity, Image, Animated, Pressable, View, Text, ScrollView, TextInput, Platform } from 'react-native';
 import { useRouter } from 'expo-router';
+import { Feather } from '@expo/vector-icons';
 
 const SWITCH_WORDS = [
   'Ivy League Schools',
@@ -35,16 +36,16 @@ function AnimatedSwitchingWord() {
 }
 
 const CATEGORIES = [
-  { icon: '📖', label: 'Overview' },
-  { icon: '📝', label: 'Test Scores' },
-  { icon: '⚡', label: 'Early Applications' },
-  { icon: '🇺🇸', label: 'Why America?' },
-  { icon: '💵', label: 'Finances' },
-  { icon: '🎯', label: '1-on-1' },
-  { icon: '📋', label: 'CommonApp' },
-  { icon: '📆', label: 'Upcoming' },
-  { icon: '📈', label: 'Data' },
-  { icon: '💼', label: 'Business' },
+  { icon: 'book-open', label: 'Overview' },
+  { icon: 'edit', label: 'Test Scores' },
+  { icon: 'zap', label: 'Applications' },
+  { icon: 'flag', label: 'US vs CA' },
+  { icon: 'dollar-sign', label: 'Finances' },
+  { icon: 'target', label: '1-on-1' },
+  { icon: 'clipboard', label: 'CommonApp' },
+  { icon: 'calendar', label: 'Upcoming' },
+  { icon: 'bar-chart-2', label: 'Data' },
+  { icon: 'briefcase', label: 'Business' },
 ];
 
 // Simple Quiz Component
@@ -136,12 +137,12 @@ function MiniQuiz({ router }: { router: any }) {
     if (step === 'start') {
       return (
         <View style={containerStyle}>
-          <Text style={{ fontSize: 24, color: '#25304A', textAlign: 'center', marginBottom: 32, fontFamily: 'Lato-Regular' }}>
+          <Text style={{ fontSize: 24, color: '#34495E', textAlign: 'center', marginBottom: 32, fontFamily: 'Lato-Regular' }}>
             Take this quick quiz to see if studying in the United States is right for you. It only takes a few minutes!
           </Text>
           <Pressable
             onPress={startQuiz}
-            style={{ backgroundColor: '#2563eb', borderRadius: 20, paddingVertical: 16, paddingHorizontal: 32, alignItems: 'center' }}
+            style={{ backgroundColor: '#004E89', borderRadius: 20, paddingVertical: 16, paddingHorizontal: 32, alignItems: 'center' }}
           >
             <Text style={{ color: '#fff', fontWeight: 'bold', fontSize: 18 }}>Start Quiz</Text>
           </Pressable>
@@ -152,7 +153,7 @@ function MiniQuiz({ router }: { router: any }) {
     if (step === 'question') {
       return (
         <View style={containerStyle}>
-          <Text style={{ fontWeight: 'bold', fontSize: 24, marginBottom: 16, textAlign: 'center', color: '#25304A' }}>
+          <Text style={{ fontWeight: 'bold', fontSize: 24, marginBottom: 16, textAlign: 'center', color: '#1E2A57' }}>
             {questions[currentQuestion].text}
           </Text>
           
@@ -169,7 +170,7 @@ function MiniQuiz({ router }: { router: any }) {
               borderColor: '#b6d7f2',
             }}
           >
-            <Text style={{ color: '#2563eb', fontWeight: 'bold', fontSize: 14 }}>
+            <Text style={{ color: '#004E89', fontWeight: 'bold', fontSize: 14 }}>
               {showInfo ? 'Hide Info' : 'Learn More'}
             </Text>
           </Pressable>
@@ -181,9 +182,9 @@ function MiniQuiz({ router }: { router: any }) {
               padding: 16,
               marginBottom: 20,
               borderLeftWidth: 4,
-              borderLeftColor: '#2563eb',
+              borderLeftColor: '#004E89',
             }}>
-              <Text style={{ color: '#25304A', fontSize: 16, lineHeight: 22 }}>
+              <Text style={{ color: '#2E2E2E', fontSize: 16, lineHeight: 22 }}>
                 {questions[currentQuestion].info}
               </Text>
               {currentQuestion === 0 && (
@@ -193,7 +194,7 @@ function MiniQuiz({ router }: { router: any }) {
                     marginTop: 12,
                     paddingVertical: 8,
                     paddingHorizontal: 12,
-                    backgroundColor: '#2563eb',
+                    backgroundColor: '#004E89',
                     borderRadius: 8,
                     alignSelf: 'flex-start',
                   }}
@@ -221,7 +222,7 @@ function MiniQuiz({ router }: { router: any }) {
                 alignItems: 'center',
               }}
             >
-              <Text style={{ color: '#25304A', fontWeight: 'bold', fontSize: 18 }}>{option}</Text>
+              <Text style={{ color: '#2E2E2E', fontWeight: 'bold', fontSize: 18 }}>{option}</Text>
             </Pressable>
           ))}
         </View>
@@ -231,12 +232,12 @@ function MiniQuiz({ router }: { router: any }) {
     if (step === 'result') {
       return (
         <View style={{...containerStyle, backgroundColor: '#e6f2fb'}}>
-          <Text style={{ fontSize: 26, fontWeight: 'bold', color: '#2563eb', marginBottom: 24 }}>Result</Text>
-          <Text style={{ fontSize: 24, color: '#25304A', textAlign: 'center', marginBottom: 32 }}>{getResult()}</Text>
-          <Pressable
-            onPress={restartQuiz}
-            style={{ backgroundColor: '#2563eb', borderRadius: 20, paddingVertical: 16, paddingHorizontal: 32, alignItems: 'center' }}
-          >
+          <Text style={{ fontSize: 26, fontWeight: 'bold', color: '#004E89', marginBottom: 24 }}>Result</Text>
+          <Text style={{ fontSize: 24, color: '#2E2E2E', textAlign: 'center', marginBottom: 32 }}>{getResult()}</Text>
+                      <Pressable
+              onPress={restartQuiz}
+              style={{ backgroundColor: '#004E89', borderRadius: 20, paddingVertical: 16, paddingHorizontal: 32, alignItems: 'center' }}
+            >
             <Text style={{ color: '#fff', fontWeight: 'bold', fontSize: 18 }}>Restart</Text>
           </Pressable>
         </View>
@@ -246,9 +247,10 @@ function MiniQuiz({ router }: { router: any }) {
   
   return (
     <View style={{ width: '100%', alignItems: 'center', justifyContent: 'flex-start', minHeight: 0, paddingTop: 0, paddingBottom: 0, marginTop: 12, marginBottom: 0, height: 'auto' }}>
-      <Text style={{ fontSize: 32, fontWeight: 'bold', color: '#25304A', marginBottom: 24, textAlign: 'center', fontFamily: 'Lato-Bold' }}>
-        Are you a Good Fit to Study in the United States?
-      </Text>
+                      <Text style={{ fontSize: 32, fontWeight: 'bold', color: '#1E2A57', marginBottom: 8, textAlign: 'center', fontFamily: 'Lato-Bold' }}>
+          Are you a <Text style={{ color: '#000000' }}>Good Fit</Text> for Studying in the U.S.?
+        </Text>
+        <View style={styles.headingDivider} />
       {renderContent()}
     </View>
   );
@@ -297,7 +299,9 @@ function CategoryCard({ category, router }: { category: { icon: string; label: s
         onHoverIn={handleHoverIn}
         onHoverOut={handleHoverOut}
       >
-        <Text style={styles.categoryIcon}>{category.icon}</Text>
+        <View style={styles.iconContainer}>
+          <Feather name={category.icon as any} size={28} color="#004E89" strokeWidth={2} />
+        </View>
         <Text style={styles.categoryLabel}>{category.label}</Text>
       </Pressable>
     </Animated.View>
@@ -328,6 +332,29 @@ export default function USScreen() {
   const handleCategorySelect = (category: { icon: string; label: string }) => {
     setSearchQuery(category.label);
     setIsSearchFocused(false);
+    
+    // Navigate to the appropriate page based on the category
+    if (category.label === 'Overview') {
+      router.replace('/us/overview');
+    } else if (category.label === 'Finances') {
+      router.replace('/us/finances');
+    } else if (category.label === 'Test Scores') {
+      router.replace('/us/test-scores');
+    } else if (category.label === 'Applications') {
+      router.replace('/us/earlyApplications');
+    } else if (category.label === 'US vs CA') {
+      router.replace('/us/why-america');
+    } else if (category.label === '1-on-1') {
+      router.replace('/us/1-on-1');
+    } else if (category.label === 'CommonApp') {
+      router.replace('/us/commonApp');
+    } else if (category.label === 'Upcoming') {
+      router.replace('/us/upcoming');
+    } else if (category.label === 'Data') {
+      router.replace('/us/data');
+    } else if (category.label === 'Business') {
+      router.replace('/us/business');
+    }
   };
 
   return (
@@ -354,14 +381,14 @@ export default function USScreen() {
       
       {/* Main Area */}
       <ScrollView contentContainerStyle={{ alignItems: 'center', backgroundColor: '#b6d7f2' }}>
-        <View style={[styles.centeredContent, { marginTop: 180 }]}>
+        <View style={[styles.centeredContent, { marginTop: 150 }]}>
           <Text style={styles.bigHeading}>
             Applying to <AnimatedSwitchingWord /> can be hard
           </Text>
           <Text style={styles.subHeading}>Let's get on the right track</Text>
           <View style={styles.searchBarContainer}>
             <View style={styles.searchBarInner}>
-              <Text style={styles.searchIcon}>🔍</Text>
+              <Feather name="search" size={20} color="#004E89" style={styles.searchIcon} />
               <TextInput
                 style={styles.searchInput}
                 placeholder="What are you looking for?"
@@ -385,19 +412,19 @@ export default function USScreen() {
                     </View>
                     <TouchableOpacity
                       style={styles.dropdownItem}
-                      onPress={() => handleCategorySelect({ icon: '🔍', label: 'Overview' })}
+                      onPress={() => handleCategorySelect({ icon: 'book-open', label: 'Overview' })}
                     >
                       <Text style={styles.dropdownText}>Overview</Text>
                     </TouchableOpacity>
                     <TouchableOpacity
                       style={styles.dropdownItem}
-                      onPress={() => handleCategorySelect({ icon: '💰', label: 'Finances' })}
+                      onPress={() => handleCategorySelect({ icon: 'dollar-sign', label: 'Finances' })}
                     >
                       <Text style={styles.dropdownText}>Finances</Text>
                     </TouchableOpacity>
                     <TouchableOpacity
                       style={styles.dropdownItem}
-                      onPress={() => handleCategorySelect({ icon: '⛵', label: 'Test Scores' })}
+                      onPress={() => handleCategorySelect({ icon: 'edit', label: 'Test Scores' })}
                     >
                       <Text style={styles.dropdownText}>Test Scores</Text>
                     </TouchableOpacity>
@@ -457,9 +484,9 @@ export default function USScreen() {
             </View>
             <View style={styles.footerRight}>
               <View style={styles.footerSocialRow}>
-                <Text style={styles.footerSocialIcon}>🎵</Text>
-                <Text style={styles.footerSocialIcon}>📸</Text>
-                <Text style={styles.footerSocialIcon}>🔗</Text>
+                <Feather name="music" size={20} color="#1f275c" style={styles.footerSocialIcon} />
+                <Feather name="camera" size={20} color="#1f275c" style={styles.footerSocialIcon} />
+                <Feather name="link" size={20} color="#1f275c" style={styles.footerSocialIcon} />
               </View>
               <Text style={styles.footerContact}>Contact Us</Text>
               <Text style={styles.footerCopyright}>© Snowtrack 2025</Text>
@@ -686,8 +713,6 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   footerSocialIcon: {
-    fontSize: 18,
-    color: '#1f275c',
     marginRight: 8,
   },
   footerContact: {
@@ -702,16 +727,24 @@ const styles = StyleSheet.create({
   bigHeading: {
     fontSize: 48,
     fontWeight: 'bold',
-    color: '#25304A',
+    color: '#1E2A57',
     textAlign: 'center',
     marginBottom: 12,
     fontFamily: 'Lato-Bold',
   },
+  headingDivider: {
+    width: 120,
+    height: 2,
+    backgroundColor: '#E5E7EB',
+    alignSelf: 'center',
+    marginBottom: 16,
+    borderRadius: 1,
+  },
   subHeading: {
     fontSize: 26,
-    color: '#25304A',
+    color: '#34495E',
     textAlign: 'center',
-    marginBottom: 32,
+    marginBottom: 16,
     fontFamily: 'Lato-Regular',
   },
   centeredContent: {
@@ -750,14 +783,12 @@ const styles = StyleSheet.create({
     display: 'none', // replaced by searchBarContainer and searchBarInner
   },
   searchIcon: {
-    fontSize: 22,
-    color: '#b6d7f2',
     marginRight: 10,
   },
   searchInput: {
     flex: 1,
     fontSize: 18,
-    color: '#25304A',
+    color: '#1a365d',
     fontFamily: 'Lato-Regular',
     backgroundColor: 'transparent',
     borderWidth: 0,
@@ -765,7 +796,7 @@ const styles = StyleSheet.create({
   },
   animatedWord: {
     fontWeight: 'bold',
-    color: '#25304A',
+    color: '#1E2A57',
     fontSize: 48,
     fontFamily: 'Lato-Bold',
   },
@@ -775,7 +806,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     gap: 12,
     marginTop: 32,
-    marginBottom: 16,
+    marginBottom: 32,
     position: 'relative',
     zIndex: 1,
   },
@@ -793,15 +824,19 @@ const styles = StyleSheet.create({
     shadowRadius: 8,
     shadowOffset: { width: 0, height: 2 },
     elevation: 2,
+    borderWidth: 1,
+    borderColor: '#f1f5f9',
   },
-  categoryIcon: {
-    fontSize: 36,
-    color: '#2563eb',
+  iconContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
     marginBottom: 8,
+    width: 40,
+    height: 40,
   },
   categoryLabel: {
     fontSize: 16,
-    color: '#25304A',
+    color: '#2E2E2E',
     fontFamily: 'Lato-Bold',
     textAlign: 'center',
   },
@@ -824,21 +859,21 @@ const styles = StyleSheet.create({
   articleHeading: {
     fontSize: 22,
     fontWeight: 'bold',
-    color: '#25304A',
+    color: '#34495E',
     marginBottom: 10,
     fontFamily: 'Lato-Bold',
     textAlign: 'center',
   },
   articleText: {
     fontSize: 16,
-    color: '#25304A',
+    color: '#2E2E2E',
     fontFamily: 'Lato-Regular',
     textAlign: 'center',
   },
   articleSectionHeading: {
     fontSize: 20,
     fontWeight: 'bold',
-    color: '#25304A',
+    color: '#2E2E2E',
     marginTop: 24,
     marginBottom: 8,
     fontFamily: 'Lato-Bold',
@@ -853,7 +888,7 @@ const styles = StyleSheet.create({
   },
   noResultsText: {
     fontSize: 18,
-    color: '#25304A',
+    color: '#2E2E2E',
     fontFamily: 'Lato-Regular',
     textAlign: 'center',
     marginBottom: 8,
@@ -894,7 +929,7 @@ const styles = StyleSheet.create({
   },
   dropdownText: {
     fontSize: 16,
-    color: '#25304A',
+    color: '#2E2E2E',
     fontFamily: 'Lato-Regular',
     flex: 1,
   },
