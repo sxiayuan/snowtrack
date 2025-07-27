@@ -35,16 +35,16 @@ function AnimatedSwitchingWord() {
 }
 
 const CATEGORIES = [
-  { icon: '🔍', label: 'Overview' },
-  { icon: '⛵', label: 'Test Scores' },
-      { icon: '⏰', label: 'Early Applications' },
-  { icon: '🏆', label: 'Why America?' },
-  { icon: '💰', label: 'Finances' },
-  { icon: '👥', label: '1-on-1' },
-  { icon: '🎖️', label: 'CommonApp' },
-  { icon: '📅', label: 'Upcoming' },
-  { icon: '📊', label: 'Data' },
-  { icon: '🤝', label: 'Business' },
+  { icon: '📖', label: 'Overview' },
+  { icon: '📝', label: 'Test Scores' },
+  { icon: '⚡', label: 'Early Applications' },
+  { icon: '🇺🇸', label: 'Why America?' },
+  { icon: '💵', label: 'Finances' },
+  { icon: '🎯', label: '1-on-1' },
+  { icon: '📋', label: 'CommonApp' },
+  { icon: '📆', label: 'Upcoming' },
+  { icon: '📈', label: 'Data' },
+  { icon: '💼', label: 'Business' },
 ];
 
 // Simple Quiz Component
@@ -306,6 +306,29 @@ function CategoryCard({ category, router }: { category: { icon: string; label: s
 
 export default function USScreen() {
   const router = useRouter();
+  const [searchQuery, setSearchQuery] = useState('');
+  const [isSearchFocused, setIsSearchFocused] = useState(false);
+
+  // Filter categories based on search query
+  const filteredCategories = searchQuery.trim() === '' 
+    ? CATEGORIES 
+    : CATEGORIES.filter(category => 
+        category.label.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+
+  const handleSearchFocus = () => {
+    setIsSearchFocused(true);
+  };
+
+  const handleSearchBlur = () => {
+    // Immediate blur response for better UX
+    setIsSearchFocused(false);
+  };
+
+  const handleCategorySelect = (category: { icon: string; label: string }) => {
+    setSearchQuery(category.label);
+    setIsSearchFocused(false);
+  };
 
   return (
     <View style={{ flex: 1, backgroundColor: '#A6D3F2' }}>
@@ -341,13 +364,64 @@ export default function USScreen() {
               <Text style={styles.searchIcon}>🔍</Text>
               <TextInput
                 style={styles.searchInput}
-                placeholder="Search by interest, name..."
+                placeholder="What are you looking for?"
                 placeholderTextColor="#b0b8c1"
-                autoFocus
+                value={searchQuery}
+                onChangeText={setSearchQuery}
+                onFocus={handleSearchFocus}
+                onBlur={handleSearchBlur}
                 underlineColorAndroid="transparent"
               />
             </View>
+            
+            {/* Search Dropdown */}
+            {isSearchFocused && (
+              <View style={styles.searchDropdown}>
+                {searchQuery.trim() === '' ? (
+                  // Show popular suggestions when no search query
+                  <>
+                    <View style={styles.dropdownHeader}>
+                      <Text style={styles.dropdownHeaderText}>Popular searches</Text>
+                    </View>
+                    <TouchableOpacity
+                      style={styles.dropdownItem}
+                      onPress={() => handleCategorySelect({ icon: '🔍', label: 'Overview' })}
+                    >
+                      <Text style={styles.dropdownText}>Overview</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      style={styles.dropdownItem}
+                      onPress={() => handleCategorySelect({ icon: '💰', label: 'Finances' })}
+                    >
+                      <Text style={styles.dropdownText}>Finances</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      style={styles.dropdownItem}
+                      onPress={() => handleCategorySelect({ icon: '⛵', label: 'Test Scores' })}
+                    >
+                      <Text style={styles.dropdownText}>Test Scores</Text>
+                    </TouchableOpacity>
+                  </>
+                ) : filteredCategories.length > 0 ? (
+                  // Show top 2 filtered results
+                  filteredCategories.slice(0, 2).map((category) => (
+                    <TouchableOpacity
+                      key={category.label}
+                      style={styles.dropdownItem}
+                      onPress={() => handleCategorySelect(category)}
+                    >
+                      <Text style={styles.dropdownText}>{category.label}</Text>
+                    </TouchableOpacity>
+                  ))
+                ) : (
+                  <View style={styles.dropdownItem}>
+                    <Text style={styles.dropdownText}>No results found</Text>
+                  </View>
+                )}
+              </View>
+            )}
           </View>
+          
           <View style={styles.categoriesGrid}>
             {[0, 1].map(row => (
               <View key={row} style={{ flexDirection: 'row', justifyContent: 'center', width: '100%' }}>
@@ -654,6 +728,8 @@ const styles = StyleSheet.create({
     marginTop: 8,
     alignItems: 'center',
     justifyContent: 'center',
+    position: 'relative',
+    zIndex: 10000,
   },
   searchBarInner: {
     flexDirection: 'row',
@@ -685,6 +761,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Lato-Regular',
     backgroundColor: 'transparent',
     borderWidth: 0,
+    fontStyle: 'italic',
   },
   animatedWord: {
     fontWeight: 'bold',
@@ -699,6 +776,8 @@ const styles = StyleSheet.create({
     gap: 12,
     marginTop: 32,
     marginBottom: 16,
+    position: 'relative',
+    zIndex: 1,
   },
   categoryCard: {
     backgroundColor: '#fff',
@@ -766,4 +845,72 @@ const styles = StyleSheet.create({
     textAlign: 'left',
     alignSelf: 'flex-start',
   },
+  noResultsContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 40,
+    paddingHorizontal: 20,
+  },
+  noResultsText: {
+    fontSize: 18,
+    color: '#25304A',
+    fontFamily: 'Lato-Regular',
+    textAlign: 'center',
+    marginBottom: 8,
+  },
+  noResultsHint: {
+    fontSize: 14,
+    color: '#666',
+    fontFamily: 'Lato-Regular',
+    textAlign: 'center',
+  },
+  searchDropdown: {
+    position: 'absolute',
+    top: '100%',
+    left: 0,
+    right: 0,
+    backgroundColor: '#fff',
+    borderRadius: 12,
+    marginTop: 4,
+    shadowColor: '#000',
+    shadowOpacity: 0.15,
+    shadowRadius: 12,
+    shadowOffset: { width: 0, height: 6 },
+    elevation: 8,
+    zIndex: 9999,
+    maxHeight: 300,
+  },
+  dropdownItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: '#f1f5f9',
+  },
+  dropdownIcon: {
+    fontSize: 20,
+    marginRight: 12,
+  },
+  dropdownText: {
+    fontSize: 16,
+    color: '#25304A',
+    fontFamily: 'Lato-Regular',
+    flex: 1,
+  },
+  dropdownHeader: {
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: '#f1f5f9',
+  },
+  dropdownHeaderText: {
+    fontSize: 12,
+    color: '#64748b',
+    fontFamily: 'Lato-Regular',
+    fontWeight: 'bold',
+    textTransform: 'uppercase',
+    letterSpacing: 0.5,
+  },
+
 });

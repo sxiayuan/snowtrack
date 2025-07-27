@@ -38,12 +38,13 @@ export default function LandingScreen() {
   };
 
   return (
-    <LinearGradient
-      colors={['#1f275c', '#4ccfff']}
-      style={[styles.container, { overflow: 'visible' }]}
-    >
+    <View style={styles.container}>
       <Snowfall />
-      {/* Logo and Title */}
+      <LinearGradient
+        colors={['#1f275c', '#4ccfff']}
+        style={[styles.gradientContainer, { overflow: 'visible' }]}
+      >
+        {/* Logo and Title */}
       <View style={styles.logoContainer}>
         <Image
           source={require('@/assets/images/SnowTrackTransparent.png')}
@@ -78,19 +79,23 @@ export default function LandingScreen() {
           </Pressable>
         </Animated.View>
       </View>
-    </LinearGradient>
+      </LinearGradient>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    position: 'relative',
+  },
+  gradientContainer: {
+    flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
     paddingTop: 0,
     marginTop: -60,
     overflow: 'visible',
-    position: 'relative',
   },
   logoContainer: {
     alignItems: 'center',
