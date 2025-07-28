@@ -369,6 +369,7 @@ export default function USScreen() {
                 source={require('@/assets/images/SnowTrackTransparent.png')}
                 style={styles.headerLogo}
                 resizeMode="contain"
+                fadeDuration={0}
               />
             </View>
             <View style={styles.brand}>
@@ -466,7 +467,7 @@ export default function USScreen() {
           <View style={[styles.footer, { marginTop: 0, backgroundColor: '#fff' }]}> 
             <View style={styles.footerLeft}>
               <View style={styles.footerLogoRow}>
-                <Image source={require('@/assets/images/SnowTrackTransparent.png')} style={styles.footerLogo} resizeMode="contain" />
+                <Image source={require('@/assets/images/SnowTrackTransparent.png')} style={styles.footerLogo} resizeMode="contain" fadeDuration={0} />
                 <Text style={styles.footerBrand}>Snowtrack</Text>
               </View>
               <View style={styles.footerLinksRow}>

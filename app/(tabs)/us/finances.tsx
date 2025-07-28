@@ -96,11 +96,12 @@ export default function FinancesPage() {
         <View style={styles.authorSection}>
           <View style={styles.authorInfo}>
             <View style={styles.authorAvatar}>
-              <Image
-                source={require('@/assets/images/SnowtrackTransparentTextless.png')}
-                style={styles.avatarLogo}
-                resizeMode="contain"
-              />
+                              <Image
+                  source={require('@/assets/images/SnowtrackTransparentTextless.png')}
+                  style={styles.avatarLogo}
+                  resizeMode="contain"
+                  fadeDuration={0}
+                />
             </View>
             <View style={styles.authorDetails}>
               <Text style={styles.authorName}>Snowtrack Advisor</Text>
@@ -131,11 +132,12 @@ export default function FinancesPage() {
         </View>
         
         <View style={styles.heroImageContainer}>
-          <Image
-            source={require('@/assets/images/finances.jpg')}
-            style={styles.heroImage}
-            resizeMode="cover"
-          />
+                      <Image
+              source={require('@/assets/images/finances.jpg')}
+              style={styles.heroImage}
+              resizeMode="cover"
+              fadeDuration={0}
+            />
           <View style={styles.heroOverlay}>
             <Text style={styles.heroText}>The Real Cost of Studying in the US</Text>
           </View>

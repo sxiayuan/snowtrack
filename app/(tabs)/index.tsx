@@ -50,6 +50,7 @@ export default function LandingScreen() {
           source={require('@/assets/images/SnowTrackTransparent.png')}
           style={styles.logo}
           resizeMode="contain"
+          fadeDuration={0}
         />
       </View>
       <Text style={styles.heading}>I want to go to school in...</Text>

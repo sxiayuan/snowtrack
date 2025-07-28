@@ -691,6 +691,7 @@ export default function UniversityDataPage() {
                   source={require('@/assets/images/SnowtrackTransparentTextless.png')}
                   style={styles.avatarLogo}
                   resizeMode="contain"
+                  fadeDuration={0}
                 />
               </View>
               <View style={styles.authorDetails}>
@@ -726,6 +727,7 @@ export default function UniversityDataPage() {
               source={require('@/assets/images/data.jpg')}
               style={styles.heroImage}
               resizeMode="cover"
+              fadeDuration={0}
             />
           </View>
           

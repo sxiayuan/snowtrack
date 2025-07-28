@@ -99,6 +99,7 @@ export default function TestScoresPage() {
                   source={require('@/assets/images/SnowtrackTransparentTextless.png')}
                   style={styles.avatarLogo}
                   resizeMode="contain"
+                  fadeDuration={0}
                 />
               </View>
               <View style={styles.authorDetails}>
@@ -140,6 +141,7 @@ export default function TestScoresPage() {
               source={require('@/assets/images/article images/porter-raab-Ucr4Yp-t364-unsplash.jpg')}
               style={styles.heroImage}
               resizeMode="cover"
+              fadeDuration={0}
             />
           </View>
           
