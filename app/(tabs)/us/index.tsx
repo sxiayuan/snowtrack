@@ -19,11 +19,13 @@ function AnimatedSwitchingWord() {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      Animated.sequence([
-        Animated.timing(fadeAnim, { toValue: 0, duration: 300, useNativeDriver: true }),
-        Animated.timing(fadeAnim, { toValue: 1, duration: 300, useNativeDriver: true }),
-      ]).start();
-      setIndex((prev) => (prev + 1) % SWITCH_WORDS.length);
+      // First fade out
+      Animated.timing(fadeAnim, { toValue: 0, duration: 300, useNativeDriver: true }).start(() => {
+        // Change the word after fade out completes
+        setIndex((prev) => (prev + 1) % SWITCH_WORDS.length);
+        // Then fade in with the new word
+        Animated.timing(fadeAnim, { toValue: 1, duration: 300, useNativeDriver: true }).start();
+      });
     }, 2000);
     return () => clearInterval(interval);
   }, []);
@@ -248,7 +250,7 @@ function MiniQuiz({ router }: { router: any }) {
   return (
     <View style={{ width: '100%', alignItems: 'center', justifyContent: 'flex-start', minHeight: 0, paddingTop: 0, paddingBottom: 0, marginTop: 12, marginBottom: 0, height: 'auto' }}>
                       <Text style={{ fontSize: 32, fontWeight: 'bold', color: '#1E2A57', marginBottom: 8, textAlign: 'center', fontFamily: 'Lato-Bold' }}>
-          Are you a <Text style={{ color: '#000000' }}>Good Fit</Text> for Studying in the U.S.?
+          Are you a Good Fit for Studying in the U.S.?
         </Text>
         <View style={styles.headingDivider} />
       {renderContent()}
@@ -335,25 +337,25 @@ export default function USScreen() {
     
     // Navigate to the appropriate page based on the category
     if (category.label === 'Overview') {
-      router.replace('/us/overview');
+      router.push('/us/overview');
     } else if (category.label === 'Finances') {
-      router.replace('/us/finances');
+      router.push('/us/finances');
     } else if (category.label === 'Test Scores') {
-      router.replace('/us/test-scores');
+      router.push('/us/test-scores');
     } else if (category.label === 'Applications') {
-      router.replace('/us/earlyApplications');
+      router.push('/us/earlyApplications');
     } else if (category.label === 'US vs CA') {
-      router.replace('/us/why-america');
+      router.push('/us/why-america');
     } else if (category.label === '1-on-1') {
-      router.replace('/us/1-on-1');
+      router.push('/us/1-on-1');
     } else if (category.label === 'CommonApp') {
-      router.replace('/us/commonApp');
+      router.push('/us/commonApp');
     } else if (category.label === 'Upcoming') {
-      router.replace('/us/upcoming');
+      router.push('/us/upcoming');
     } else if (category.label === 'Data') {
-      router.replace('/us/data');
+      router.push('/us/data');
     } else if (category.label === 'Business') {
-      router.replace('/us/business');
+      router.push('/us/business');
     }
   };
 
@@ -387,77 +389,54 @@ export default function USScreen() {
             Applying to <AnimatedSwitchingWord /> can be hard
           </Text>
           <Text style={styles.subHeading}>Let's get on the right track</Text>
+          
+          {/* New Search Bar */}
           <View style={styles.searchBarContainer}>
             <View style={styles.searchBarInner}>
               <Feather name="search" size={20} color="#004E89" style={styles.searchIcon} />
               <TextInput
                 style={styles.searchInput}
-                placeholder="What are you looking for?"
+                placeholder="Search categories..."
                 placeholderTextColor="#b0b8c1"
                 value={searchQuery}
                 onChangeText={setSearchQuery}
-                onFocus={handleSearchFocus}
-                onBlur={handleSearchBlur}
+                onFocus={() => setIsSearchFocused(true)}
+                onBlur={() => setIsSearchFocused(false)}
                 underlineColorAndroid="transparent"
               />
             </View>
             
-            {/* Search Dropdown */}
+            {/* Empty Dropdown */}
             {isSearchFocused && (
-              <View style={styles.searchDropdown}>
-                {searchQuery.trim() === '' ? (
-                  // Show popular suggestions when no search query
-                  <>
-                    <View style={styles.dropdownHeader}>
-                      <Text style={styles.dropdownHeaderText}>Popular searches</Text>
-                    </View>
-                    <TouchableOpacity
-                      style={styles.dropdownItem}
-                      onPress={() => handleCategorySelect({ icon: 'book-open', label: 'Overview' })}
-                    >
-                      <Text style={styles.dropdownText}>Overview</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                      style={styles.dropdownItem}
-                      onPress={() => handleCategorySelect({ icon: 'dollar-sign', label: 'Finances' })}
-                    >
-                      <Text style={styles.dropdownText}>Finances</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                      style={styles.dropdownItem}
-                      onPress={() => handleCategorySelect({ icon: 'edit', label: 'Test Scores' })}
-                    >
-                      <Text style={styles.dropdownText}>Test Scores</Text>
-                    </TouchableOpacity>
-                  </>
-                ) : filteredCategories.length > 0 ? (
-                  // Show top 2 filtered results
-                  filteredCategories.slice(0, 2).map((category) => (
-                    <TouchableOpacity
-                      key={category.label}
-                      style={styles.dropdownItem}
-                      onPress={() => handleCategorySelect(category)}
-                    >
-                      <Text style={styles.dropdownText}>{category.label}</Text>
-                    </TouchableOpacity>
-                  ))
-                ) : (
-                  <View style={styles.dropdownItem}>
-                    <Text style={styles.dropdownText}>No results found</Text>
-                  </View>
-                )}
+              <View style={{ backgroundColor: '#fff', borderRadius: 12, marginTop: 0, shadowColor: '#000', shadowOpacity: 0.15, shadowRadius: 12, shadowOffset: { width: 0, height: 6 }, elevation: 8, zIndex: 1, width: '100%', position: 'relative' }}>
+                <View style={{ paddingVertical: 8, paddingHorizontal: 16, borderBottomWidth: 1, borderBottomColor: '#f1f5f9' }}>
+                  <Text style={{ fontSize: 12, color: '#64748b', fontFamily: 'Lato-Regular', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: 0.5 }}>Popular Searches</Text>
+                </View>
+                <View style={{ paddingVertical: 12, paddingHorizontal: 16 }}>
+                  <Text style={{ fontSize: 16, color: '#2E2E2E', fontFamily: 'Lato-Regular', textAlign: 'center' }}>Search for what category you are looking for!</Text>
+                </View>
               </View>
             )}
           </View>
           
           <View style={styles.categoriesGrid}>
-            {[0, 1].map(row => (
-              <View key={row} style={{ flexDirection: 'row', justifyContent: 'center', width: '100%' }}>
-                {CATEGORIES.slice(row * 5, row * 5 + 5).map((cat) => (
+            {searchQuery.trim() === '' ? (
+              // Show all categories when no search query
+              [0, 1].map(row => (
+                <View key={row} style={{ flexDirection: 'row', justifyContent: 'center', width: '100%' }}>
+                  {CATEGORIES.slice(row * 5, row * 5 + 5).map((cat) => (
+                    <CategoryCard key={cat.label} category={cat} router={router} />
+                  ))}
+                </View>
+              ))
+            ) : (
+              // Show filtered categories when searching
+              <View style={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center', gap: 12 }}>
+                {filteredCategories.map((cat) => (
                   <CategoryCard key={cat.label} category={cat} router={router} />
                 ))}
               </View>
-            ))}
+            )}
           </View>
           <MiniQuiz router={router} />
         </View>
@@ -523,7 +502,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingHorizontal: 32,
-    paddingVertical: 24,
+    paddingVertical: 16,
     backgroundColor: '#f0f8ff',
   },
   headerLeft: {
@@ -534,15 +513,15 @@ const styles = StyleSheet.create({
     marginRight: 20,
   },
   headerLogo: {
-    width: 48,
-    height: 48,
+    width: 36,
+    height: 36,
   },
   brand: {
     flexDirection: 'row',
     alignItems: 'center',
   },
   brandName: {
-    fontSize: 32,
+    fontSize: 28,
     fontWeight: 'bold',
     color: '#1f275c',
     fontFamily: 'Lato-Bold',
@@ -769,22 +748,31 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: '#fff',
-    borderRadius: 32,
-    paddingHorizontal: 18,
-    paddingVertical: 10,
+    borderRadius: 20,
+    paddingHorizontal: 20,
+    paddingVertical: 16,
     width: '100%',
     shadowColor: '#000',
-    shadowOpacity: 0.04,
-    shadowRadius: 8,
-    shadowOffset: { width: 0, height: 2 },
-    // Soft inner shadow (web only)
-    boxShadow: 'inset 0 2px 8px #e0eafc',
+    shadowOpacity: 0.06,
+    shadowRadius: 24,
+    shadowOffset: { width: 0, height: 8 },
+    elevation: 12,
+    borderWidth: 1,
+    borderColor: '#f1f5f9',
   },
   searchBar: {
     display: 'none', // replaced by searchBarContainer and searchBarInner
   },
   searchIcon: {
     marginRight: 10,
+  },
+  searchIconContainer: {
+    marginRight: 12,
+    padding: 4,
+  },
+  clearButton: {
+    padding: 4,
+    marginLeft: 8,
   },
   searchInput: {
     flex: 1,
@@ -919,10 +907,12 @@ const styles = StyleSheet.create({
   dropdownItem: {
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'space-between',
     paddingVertical: 12,
     paddingHorizontal: 16,
     borderBottomWidth: 1,
     borderBottomColor: '#f1f5f9',
+    minHeight: 44,
   },
   dropdownIcon: {
     fontSize: 20,
